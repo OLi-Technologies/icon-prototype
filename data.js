@@ -73,7 +73,7 @@ const GENRES = [
   ['Romance', 'heart'], ['Comedy', 'smile'], ['Drama', 'masks'], ['Horror', 'ghost'], ['Thriller', 'search'], ['Mystery', 'hat']
 ];
 const CITIES = ['Manila', 'Cebu', 'Davao', 'Iloilo', 'Quezon City'];
-const IMG = n => `${n}.jpg`;
+const IMG = n => `img/${n}.jpg`;
 const STORIES = [
   { id: 's1', title: 'The Second Chance', genre: 'Romance', tags: ['Romance', 'Drama'], city: 'Manila', img: 'couple', eps: 3, views: 125000, likes: 12400, comments: 842, tagline: 'Sometimes, the right person comes at the wrong time.', syn: 'Two strangers meet again after years, but this time, nothing is the same.', cast: ['a1', 'a2'], date: 'Oct 2024' },
   { id: 's2', title: 'Roommates in Chaos', genre: 'Comedy', tags: ['Comedy', 'Friendship'], city: 'Cebu', img: 'roommates', eps: 3, views: 98000, likes: 9200, comments: 421, tagline: 'Same roof. Different dreams. Total chaos.', syn: 'Three roommates, one tiny apartment, and a landlord who never stops knocking.', cast: ['a3', 'a1'] },
