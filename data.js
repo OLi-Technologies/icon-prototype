@@ -4,6 +4,8 @@ const $$ = (s, r = document) => [...r.querySelectorAll(s)];
 
 /* ---------- Icons ---------- */
 const P = {
+  image:'<rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="9" cy="10" r="1.8"/><path d="M3 17l5-4 4 3 3-2 6 4"/>',
+  userplus:'<circle cx="9" cy="8" r="4"/><path d="M2 21c0-4 3-6 7-6s7 2 7 6M19 8v6M16 11h6"/>',
   heart:'<path d="M12 21s-8-5.3-8-11.2A4.6 4.6 0 0 1 12 7a4.6 4.6 0 0 1 8 3.8C20 15.7 12 21 12 21z"/>',
   smile:'<circle cx="12" cy="12" r="9"/><path d="M8 14s1.5 2 4 2 4-2 4-2M9 9.5h.01M15 9.5h.01"/>',
   masks:'<path d="M3 5h10v6a5 5 0 0 1-10 0V5zM6 8.5h.01M10 8.5h.01M6 12.5s1 1 2 1 2-1 2-1"/><path d="M13 9h8v5a4.5 4.5 0 0 1-8 2.5"/>',
@@ -73,7 +75,22 @@ const GENRES = [
   ['Romance', 'heart'], ['Comedy', 'smile'], ['Drama', 'masks'], ['Horror', 'ghost'], ['Thriller', 'search'], ['Mystery', 'hat']
 ];
 const CITIES = ['Manila', 'Cebu', 'Davao', 'Iloilo', 'Quezon City'];
-const IMG = n => `img/${n}.jpg`;
+const IMG = n => { n = String(n); try { if (n === 'avatar' && S && S.user && S.user.photo) return S.user.photo; } catch { } return n.startsWith('data:') ? n : `img/${n}.jpg`; };
+const PHC = ['Angeles', 'Antipolo', 'Bacolod', 'Baguio', 'Batangas City', 'Biñan', 'Butuan', 'Cabanatuan', 'Cagayan de Oro', 'Calamba', 'Caloocan', 'Cavite City', 'Cebu City', 'Dagupan', 'Dasmariñas', 'Davao City', 'General Santos', 'Iligan', 'Iloilo City', 'Lapu-Lapu', 'Las Piñas', 'Legazpi', 'Lipa', 'Makati', 'Malabon', 'Mandaluyong', 'Mandaue', 'Manila', 'Marikina', 'Muntinlupa', 'Naga', 'Navotas', 'Olongapo', 'Parañaque', 'Pasay', 'Pasig', 'Puerto Princesa', 'Quezon City', 'San Fernando', 'San Jose del Monte', 'San Juan', 'Santa Rosa', 'Tacloban', 'Taguig', 'Tarlac City', 'Valenzuela', 'Zamboanga City', 'Other (Philippines)'];
+const GENDERS = ['Woman', 'Man', 'Non-binary', 'Prefer to self-describe', 'Prefer not to say'];
+const PERIODS = ['This Week', 'This Month', 'This Quarter'];
+/* Prize amounts are placeholders. In production the admin portal sets them per period. */
+const PRIZES = { 'This Week': [5000, 2500, 1000], 'This Month': [25000, 10000, 5000], 'This Quarter': [100000, 50000, 25000] };
+const peso = n => '₱' + Number(n).toLocaleString('en-PH');
+function periodRange(p) {
+  const now = Date.now() + 8 * 3600e3, d = new Date(now), y = d.getUTCFullYear(), m = d.getUTCMonth(); let a, b;
+  if (p === 'This Week') { const k = (d.getUTCDay() + 6) % 7; a = Date.UTC(y, m, d.getUTCDate() - k); b = a + 7 * 864e5 - 1; }
+  else if (p === 'This Month') { a = Date.UTC(y, m, 1); b = Date.UTC(y, m + 1, 1) - 1; }
+  else { const q = Math.floor(m / 3) * 3; a = Date.UTC(y, q, 1); b = Date.UTC(y, q + 3, 1) - 1; }
+  const f = t => new Date(t).toLocaleDateString('en-US', { month: 'short', day: 'numeric', timeZone: 'UTC' });
+  const left = Math.max(0, b - now), dd = Math.floor(left / 864e5), hh = Math.floor(left % 864e5 / 36e5);
+  return { label: `${f(a)} – ${f(b)}, ${new Date(b).getUTCFullYear()}`, left: dd ? `${dd}d ${hh}h left` : `${hh}h left` };
+}
 const STORIES = [
   { id: 's1', title: 'The Second Chance', genre: 'Romance', tags: ['Romance', 'Drama'], city: 'Manila', img: 'couple', eps: 3, views: 125000, likes: 12400, comments: 842, tagline: 'Sometimes, the right person comes at the wrong time.', syn: 'Two strangers meet again after years, but this time, nothing is the same.', cast: ['a1', 'a2'], date: 'Oct 2024' },
   { id: 's2', title: 'Roommates in Chaos', genre: 'Comedy', tags: ['Comedy', 'Friendship'], city: 'Cebu', img: 'roommates', eps: 3, views: 98000, likes: 9200, comments: 421, tagline: 'Same roof. Different dreams. Total chaos.', syn: 'Three roommates, one tiny apartment, and a landlord who never stops knocking.', cast: ['a3', 'a1'] },
@@ -98,9 +115,9 @@ const PLAYLISTS = [
   ['Rising Actors', 'a4', 'user'], ['Pinoy Pride', 'church2', 'globe'], ['Global Hits', 'beyond', 'globe']
 ];
 const TIERS = {
-  free: { name: 'Free', price: 0, stories: 5, eps: 1, actors: 3, blurb: 'Try the full loop' },
-  plus: { name: 'Plus', price: 99, stories: 50, eps: 3, actors: 3, blurb: 'More stories, longer arcs' },
-  pro: { name: 'Pro', price: 199, stories: Infinity, eps: 10, actors: 5, blurb: 'Fair-use unlimited stories' },
+  free: { name: 'Free', price: 0, stories: 5, eps: 5, actors: 3, blurb: 'Try the full loop' },
+  plus: { name: 'Plus', price: 99, stories: 50, eps: 15, actors: 3, blurb: 'More stories, longer arcs' },
+  pro: { name: 'Pro', price: 199, stories: Infinity, eps: 30, actors: 5, blurb: 'Fair-use unlimited stories' },
 };
 const fmt = n => n >= 1e6 ? (n / 1e6).toFixed(n % 1e6 ? 1 : 0).replace(/\.0$/, '') + 'M' : n >= 1e3 ? (n / 1e3).toFixed(n >= 1e5 ? 0 : 1).replace(/\.0$/, '') + 'K' : '' + n;
 const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
@@ -228,6 +245,23 @@ const Server = (() => {
     db.bibles[prodId] = { id: prodId, owner: user.id, kind, title: (title || '').trim() || (kind === 'podcast' ? 'Untitled podcast' : 'Untitled vlog'), genre: kind === 'podcast' ? 'Podcast' : 'Vlog', premise: notes || '', roles: [{ role: 0, character: user.name, actor: user.name.split(' ')[0] }], episodes: [{ n: 1, title: 'Episode 1', loc: 'Anywhere', setup: notes || '', lines: [], cue: '', free: true }], created: Date.now() };
     save(); return prodId;
   }
+  /* Manual story (no AI): the user picks genre, actors and planned runtime, then records or uploads each <=60 s episode. */
+  function createStory(user, { title, genre, cast, runtimeMin, episodes, city }, opKey) {
+    const ex = db.ledger.find(l => l.op === opKey); if (ex && ex.state !== 'released') return { ok: true, prodId: ex.prodId, dup: true };
+    const T = TIERS[user.tier];
+    if (!(title || '').trim()) return { ok: false, error: 'Give your story a title.' };
+    if (!GENRES.some(g => g[0] === genre)) return { ok: false, error: 'Choose a genre.' };
+    if (runtimeMin < 1 || runtimeMin > T.eps) return { ok: false, error: `${T.name} allows a planned runtime of up to ${T.eps} min.` };
+    if (cast.length < 1 || cast.length > T.actors) return { ok: false, error: `${T.name} allows up to ${T.actors} actors.` };
+    if (remaining(user.id, user.tier) < 1) return { ok: false, error: `You've used all ${T.stories} stories this month. Resets ${resetDate()} (Asia/Manila).`, quota: true };
+    const prodId = 'p' + Date.now().toString(36);
+    db.ledger.push({ op: opKey, uid: user.id, month: monthKey(), state: 'committed', prodId, at: Date.now() });
+    db.bibles[prodId] = { id: prodId, owner: user.id, kind: 'story', title: title.trim(), genre, city, premise: '', roles: cast.map((c, i) => ({ role: i, character: CHAR_NAMES[i], actor: c })), episodes: Array.from({ length: episodes || runtimeMin }, (_, i) => ({ n: i + 1, title: 'Episode ' + (i + 1), loc: city, setup: '', lines: [], cue: '', manual: true })), runtimeMin, created: Date.now() };
+    save(); return { ok: true, prodId };
+  }
+  /* Upload/record length cap in seconds. Hard cap 60 s; the admin portal can lower it per account. */
+  const ADM = 'icon.admin.v1';
+  function uploadLimit(user) { let c = {}; try { c = JSON.parse(localStorage.getItem(ADM)) || {}; } catch { } const hard = Math.min(60, c.hardCap || 60); const v = (c.perUser && c.perUser[user?.id]) ?? c.defaultMax ?? 60; return Math.max(5, Math.min(hard, v)); }
   function buildBible(req, user, prodId) {
     const r = rnd(prodId + req.genre); const bank = BANK[req.genre];
     const names = CHAR_NAMES.slice(0, req.cast.length);
@@ -251,7 +285,7 @@ const Server = (() => {
   function overview(prodId) {
     const b = db.bibles[prodId]; if (!b) return null; const t = db.takes[prodId] || {};
     const accepted = Object.keys(t).filter(k => t[k].state === 'ready').length;
-    return { id: b.id, kind: b.kind || 'story', title: b.title, genre: b.genre, premise: b.premise, roles: b.roles, total: b.episodes.length, accepted, unlocked: Math.min(b.episodes.length, accepted + 1), takes: t, meta: { city: b.city, lang: b.lang } };
+    return { id: b.id, kind: b.kind || 'story', title: b.title, genre: b.genre, premise: b.premise, roles: b.roles, total: b.episodes.length, runtimeMin: b.runtimeMin || 0, accepted, unlocked: Math.min(b.episodes.length, accepted + 1), takes: t, meta: { city: b.city, lang: b.lang } };
   }
   function getScript(prodId, n) {
     const b = db.bibles[prodId]; if (!b) return { ok: false, error: 'Story not found.' };
@@ -271,7 +305,7 @@ const Server = (() => {
   }
   function removeAll(uid) { Object.keys(db.bibles).forEach(k => db.bibles[k].owner === uid && (delete db.bibles[k], delete db.takes[k])); db.ledger = db.ledger.filter(l => l.uid !== uid); save(); }
   const mine = uid => Object.values(db.bibles).filter(b => b.owner === uid).map(b => overview(b.id)).reverse();
-  return { createFree, generate, getScript, overview, acceptTake, remaining, used, resetDate, validate, mine, removeAll };
+  return { createFree, createStory, uploadLimit, generate, getScript, overview, acceptTake, remaining, used, resetDate, validate, mine, removeAll };
 })();
 
 /* ---------- Filters and edit decisions (applied at playback; the server renders the final file) ---------- */
