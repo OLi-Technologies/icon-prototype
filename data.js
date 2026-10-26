@@ -4,6 +4,17 @@ const $$ = (s, r = document) => [...r.querySelectorAll(s)];
 
 /* ---------- Icons ---------- */
 const P = {
+  clips:'<rect x="5.5" y="2.5" width="13" height="19" rx="3.5"/><path d="M10.2 8.6v6.6l5-3.3z"/>',
+  clipsF:'<path fill-rule="evenodd" d="M9 2h6a4 4 0 0 1 4 4v12a4 4 0 0 1-4 4H9a4 4 0 0 1-4-4V6a4 4 0 0 1 4-4zm1.2 6.6v6.6l5-3.3-5-3.3z"/>',
+  plusq:'<rect x="3" y="3" width="18" height="18" rx="5"/><path d="M12 8v8M8 12h8"/>',
+  plusqF:'<path fill-rule="evenodd" d="M8 2.5h8A5.5 5.5 0 0 1 21.5 8v8a5.5 5.5 0 0 1-5.5 5.5H8A5.5 5.5 0 0 1 2.5 16V8A5.5 5.5 0 0 1 8 2.5zM11.2 7.4v3.8H7.4v1.6h3.8v3.8h1.6v-3.8h3.8v-1.6h-3.8V7.4z"/>',
+  music:'<path d="M9 18V5l11-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="17" cy="16" r="3"/>',
+  scissors:'<circle cx="6" cy="7" r="3"/><circle cx="6" cy="17" r="3"/><path d="M8.4 8.6L20 19M8.4 15.4L20 5"/>',
+  sliders:'<path d="M4 7h9M17 7h3M4 17h3M11 17h9M15 4v6M9 14v6"/>',
+  tag:'<path d="M3 3h8l10 10-8 8L3 11V3z"/><path d="M7.5 7.5h.01"/>',
+  dotsh:'<path d="M5 12h.01M12 12h.01M19 12h.01" stroke-width="3"/>',
+  textaa:'<path d="M2.5 18l5-12 5 12M4.5 14h6M14.5 18v-5a2.8 2.8 0 0 1 5.6 0v5M14.5 15.5h5.6"/>',
+  star:'<path d="M12 3l2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1L3.2 9.500l6.100-.9L12 3z"/>',
   image:'<rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="9" cy="10" r="1.8"/><path d="M3 17l5-4 4 3 3-2 6 4"/>',
   userplus:'<circle cx="9" cy="8" r="4"/><path d="M2 21c0-4 3-6 7-6s7 2 7 6M19 8v6M16 11h6"/>',
   heart:'<path d="M12 21s-8-5.3-8-11.2A4.6 4.6 0 0 1 12 7a4.6 4.6 0 0 1 8 3.8C20 15.7 12 21 12 21z"/>',
@@ -104,16 +115,48 @@ const STORIES = [
   { id: 's10', title: 'Just Friends?', genre: 'Romance', tags: ['Romance', 'Comedy'], city: 'Quezon City', img: 'roommates', eps: 3, views: 33000, likes: 2600, comments: 90, tagline: 'The line between friend and more.', syn: 'Best friends, one awkward almost-kiss.', cast: ['a4', 'a1'] },
 ];
 const ACTORS = [
-  { id: 'a1', name: 'Maria Santos', handle: 'mariasantos', img: 'a1', followers: 1200000, city: 'Manila' },
-  { id: 'a2', name: 'Aaron Cruz', handle: 'aaroncruz', img: 'a2', followers: 980000, city: 'Cebu' },
-  { id: 'a3', name: 'Bea Reyes', handle: 'beareyes', img: 'a3', followers: 820000, city: 'Davao' },
-  { id: 'a4', name: 'Jon Lim', handle: 'jonlim', img: 'a4', followers: 640000, city: 'Manila' },
-  { id: 'a5', name: 'Cathy Garcia', handle: 'cathygarcia', img: 'a5', followers: 510000, city: 'Iloilo' },
+  { id: 'a1', name: 'Maria Santos', handle: 'mariasantos', img: 'a1', followers: 1200000, city: 'Manila', country: 'Philippines' },
+  { id: 'a2', name: 'Aaron Cruz', handle: 'aaroncruz', img: 'a2', followers: 980000, city: 'Cebu', country: 'Philippines' },
+  { id: 'a3', name: 'Bea Reyes', handle: 'beareyes', img: 'a3', followers: 820000, city: 'Davao', country: 'Singapore' },
+  { id: 'a4', name: 'Jon Lim', handle: 'jonlim', img: 'a4', followers: 640000, city: 'Manila', country: 'United States' },
+  { id: 'a5', name: 'Cathy Garcia', handle: 'cathygarcia', img: 'a5', followers: 510000, city: 'Iloilo', country: 'Philippines' },
 ];
 const PLAYLISTS = [
   ['Feel Good Stories', 'smile', 'smile'], ['Kilig Moments', 'couple', 'heart'], ['Plot Twists', 'encounter', 'search'],
   ['Rising Actors', 'a4', 'user'], ['Pinoy Pride', 'church2', 'globe'], ['Global Hits', 'beyond', 'globe']
 ];
+
+/* ---------- v2: countries, flags, extra sample videos, clips ---------- */
+const COUNTRIES = [['Philippines','PH'],['United States','US'],['Japan','JP'],['South Korea','KR'],['Singapore','SG'],['United Kingdom','GB'],['Australia','AU'],['Canada','CA'],['India','IN'],['Indonesia','ID'],['Thailand','TH'],['Vietnam','VN'],['Malaysia','MY'],['United Arab Emirates','AE'],['Saudi Arabia','SA'],['Hong Kong','HK'],['Taiwan','TW'],['China','CN'],['New Zealand','NZ'],['Germany','DE'],['France','FR'],['Spain','ES'],['Italy','IT'],['Brazil','BR'],['Mexico','MX'],['Nigeria','NG'],['South Africa','ZA']];
+const cc = n => (COUNTRIES.find(c => c[0] === n) || [n, 'XX'])[1];
+const flag = n => n === 'Global' || !n ? '<span class="fl fg" aria-hidden="true"></span>' : `<img class="fl" src="flags/${cc(n).toLowerCase()}.svg" alt="" loading="lazy">`;
+const CNAMES = COUNTRIES.map(c => c[0]);
+const CMAP = { s1: 'Philippines', s2: 'Philippines', s3: 'Philippines', s4: 'United States', s5: 'Philippines', s6: 'Philippines', s7: 'Japan', s8: 'Philippines', s9: 'Australia', s10: 'Singapore' };
+STORIES.forEach(s => { s.country = CMAP[s.id] || 'Philippines'; s.clip = `v/${s.id}.mp4`; });
+STORIES.push(
+  { id: 's11', title: 'Simbang Gabi', genre: 'Drama', tags: ['Drama', 'Faith'], city: 'Manila', country: 'Philippines', img: 'church1', clip: 'v/s11.mp4', eps: 3, views: 31000, likes: 2400, comments: 98, tagline: 'Nine dawns. One quiet wish.', syn: 'A nine-day dawn mass tradition, and the wish a young woman is almost afraid to say out loud.', cast: ['a1'] },
+  { id: 's12', title: 'Vows', genre: 'Romance', tags: ['Romance', 'Drama'], city: 'Cebu', country: 'Philippines', img: 'church2', clip: 'v/s12.mp4', eps: 2, views: 29000, likes: 2900, comments: 120, tagline: 'Say it like you mean it.', syn: 'Hours before the wedding, two people test the words they wrote for each other.', cast: ['a2', 'a1'] },
+  { id: 's13', title: 'Spotlight', genre: 'Drama', tags: ['Drama'], city: 'Global', country: 'Canada', img: 'a1', clip: 'v/s13.mp4', eps: 3, views: 27000, likes: 2100, comments: 80, tagline: 'The audition that changes everything.', syn: 'One take, one chance, and a casting room that does not smile back.', cast: ['a1'] },
+  { id: 's14', title: 'Audition Day', genre: 'Comedy', tags: ['Comedy'], city: 'Global', country: 'Singapore', img: 'a3', clip: 'v/s14.mp4', eps: 3, views: 25000, likes: 2600, comments: 105, tagline: 'Nerves, nachos and one very loud sneeze.', syn: 'Everything that can go wrong in a waiting room, does.', cast: ['a3'] },
+  { id: 's15', title: 'Night Shift', genre: 'Thriller', tags: ['Thriller', 'Mystery'], city: 'Global', country: 'South Korea', img: 'a2', clip: 'v/s15.mp4', eps: 3, views: 23000, likes: 1900, comments: 76, tagline: 'Every call has a voice you know.', syn: 'A radio dispatcher realises tonight’s caller has been dead for a year.', cast: ['a2'] },
+  { id: 's16', title: 'Island Radio', genre: 'Mystery', tags: ['Mystery'], city: 'Global', country: 'Indonesia', img: 'a5', clip: 'v/s16.mp4', eps: 3, views: 21000, likes: 1700, comments: 64, tagline: 'A station that only plays tomorrow’s songs.', syn: 'On a quiet island, one frequency knows what happens next.', cast: ['a5'] }
+);
+/* Short vertical clips (all 9:16, max 60 s) for the Clips feed. src can be shared with a story trailer. */
+const CLIPS = [
+  { id: 'k1', actor: 'a4', series: 's5', src: 'v/k1.mp4', img: 'a4', cap: 'One take. No second chances. 🎬', genre: 'Thriller', likes: 8200, comments: 214, views: 96000, country: 'United States' },
+  { id: 'k2', actor: 'a1', series: 's1', src: 'v/s1.mp4', img: 'couple', cap: 'The look that broke the internet. Episode 2 drops tonight.', genre: 'Romance', likes: 15400, comments: 612, views: 188000, country: 'Philippines' },
+  { id: 'k3', actor: 'a3', series: 's14', src: 'v/s14.mp4', img: 'a3', cap: 'Waiting room chaos, part 1 😂', genre: 'Comedy', likes: 6100, comments: 158, views: 74000, country: 'Singapore' },
+  { id: 'k4', actor: 'a2', series: 's12', src: 'v/s12.mp4', img: 'church2', cap: 'Practising my vows (please don’t laugh).', genre: 'Romance', likes: 9800, comments: 301, views: 121000, country: 'Philippines' },
+  { id: 'k5', actor: 'a5', series: 's16', src: 'v/s16.mp4', img: 'a5', cap: 'This radio only plays tomorrow’s songs…', genre: 'Mystery', likes: 4200, comments: 97, views: 51000, country: 'Indonesia' },
+  { id: 'k6', actor: 'a1', series: 's13', src: 'v/k3.mp4', img: 'a1', cap: 'Behind the scenes of Spotlight.', genre: 'Drama', likes: 7300, comments: 189, views: 88000, country: 'Canada' },
+  { id: 'k7', actor: 'a4', series: 's3', src: 'v/s3.mp4', img: 'lastmsg', cap: 'Some words arrive too late.', genre: 'Drama', likes: 11200, comments: 420, views: 140000, country: 'Philippines' },
+  { id: 'k8', actor: 'a3', series: 's2', src: 'v/s2.mp4', img: 'roommates', cap: 'Same roof. Different dreams. 🏠', genre: 'Comedy', likes: 5400, comments: 133, views: 67000, country: 'Philippines' },
+  { id: 'k9', actor: 'a2', series: 's15', src: 'v/s15.mp4', img: 'a2', cap: 'Do NOT pick up the phone.', genre: 'Thriller', likes: 6900, comments: 175, views: 83000, country: 'South Korea' },
+  { id: 'k10', actor: 'a5', series: 's11', src: 'v/s11.mp4', img: 'church1', cap: 'Nine dawns. One wish.', genre: 'Drama', likes: 3900, comments: 88, views: 42000, country: 'Philippines' },
+  { id: 'k11', actor: 'a1', series: 's9', src: 'v/s9.mp4', img: 'smile', cap: 'Start over, one scene at a time.', genre: 'Drama', likes: 5100, comments: 121, views: 59000, country: 'Australia' },
+  { id: 'k12', actor: 'a4', series: 's8', src: 'v/s8.mp4', img: 'trio', cap: 'Barkada reunion (zero plans).', genre: 'Comedy', likes: 8800, comments: 266, views: 104000, country: 'Philippines' }
+].map(c => { const a = ACTORS.find(x => x.id === c.actor); const st = STORIES.find(x => x.id === c.series); return { ...c, isClip: true, title: st ? st.title : 'Clip', tags: [c.genre], city: 'Global', eps: 1, tagline: c.cap, syn: c.cap, cast: [c.actor], clip: c.src }; });
+
 const TIERS = {
   free: { name: 'Free', price: 0, stories: 5, eps: 5, actors: 3, blurb: 'Try the full loop' },
   plus: { name: 'Plus', price: 99, stories: 50, eps: 15, actors: 3, blurb: 'More stories, longer arcs' },
@@ -327,9 +370,10 @@ const SEED_TEXT = {
   Vlog: ['Love this vibe!', 'Great tips, thank you.', 'Subscribed to your stories.', 'Where was this filmed?'],
   Podcast: ['Great conversation.', 'Listened to this on my commute.', 'Please do part two.', 'Learned a lot here.'],
 };
+const SEED_REPLY = ['Same! I rewatched it twice.', 'Totally agree 🔥', 'Following for the next episode.'];
 function seedComments(s) {
   if (!s || s.mine) return [];
   const t = SEED_TEXT[s.genre] || SEED_TEXT.Drama; const H = [2, 5, 26, 70]; const L = [24, 11, 7, 3];
-  return t.map((x, i) => ({ id: `seed_${s.id}_${i}`, uid: 'seed', n: SEED_NAMES[(i + s.id.length) % SEED_NAMES.length], t: x, at: Date.now() - H[i] * 3600e3, base: L[i] + (s.id.charCodeAt(s.id.length - 1) % 5) * 2, seed: true }));
+  return t.map((x, i) => ({ id: `seed_${s.id}_${i}`, uid: 'seed', n: SEED_NAMES[(i + s.id.length) % SEED_NAMES.length], t: x, at: Date.now() - H[i] * 3600e3, base: L[i] + (s.id.charCodeAt(s.id.length - 1) % 5) * 2, seed: true, r: i < 2 ? SEED_REPLY.slice(i, i + (i ? 1 : 2)).map((y, j) => ({ id: `seed_${s.id}_${i}_r${j}`, uid: 'seed', n: SEED_NAMES[(i + j + 2 + s.id.length) % SEED_NAMES.length], t: y, at: Date.now() - (H[i] - 1 - j) * 3600e3, base: 1 + j * 2, seed: true })) : [] }));
 }
 const ago = ts => { const m = Math.max(1, Math.round((Date.now() - ts) / 60000)); return m < 60 ? m + 'm ago' : m < 1440 ? Math.round(m / 60) + 'h ago' : Math.round(m / 1440) + 'd ago'; };
