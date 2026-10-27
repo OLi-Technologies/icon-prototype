@@ -39,7 +39,7 @@ function nextWatch() {
   pool.filter(s => !l.includes(s)).forEach(s => l.push(s)); return { list: l.slice(0, 9), pg };
 }
 function heroHtml() {
-  return `<div class="hero2"><div class="hslides" id="hslides">${HERO.map((id, i) => { const s = getStory(id); const f = S.follows.includes(id); return `<div class="hs2" data-i="${i}"><video ${i ? '' : `src="${s.clip}" autoplay`} data-src="${s.clip}" poster="${IMG(s.img)}" muted playsinline preload="${i ? 'none' : 'auto'}"></video><div class="hsh"></div><div class="hin" data-go="#/story/${id}"><span class="pill pk">Featured series</span><h1>${esc(s.title)}</h1><div class="htag">${esc(s.tagline)}</div><div class="hmeta">${flag(s.country)} · ${s.genre} · ${s.eps} episodes · ${ic('eye').replace('class="i', 'style="width:12px;vertical-align:-2px" class="i')} ${fmt(sv(s))}</div></div><div class="hbtns"><button class="btn pri sm" data-go="#/story/${id}">${icf('play').replace('class="i', 'style="width:12px" class="i')} Watch now</button><button class="btn sm glass" data-act="followStory" data-v="${id}">${f ? 'Following' : '+ My list'}</button></div></div>`; }).join('')}</div><button class="hmute" data-act="hMute" aria-label="Turn sound on">${ic('mute')}</button><div class="hdots" id="hdots">${HERO.map((_, i) => `<i class="${i ? '' : 'on'}"></i>`).join('')}</div></div>`;
+  return `<div class="hero2"><div class="hslides" id="hslides">${HERO.map((id, i) => { const s = getStory(id); const f = S.follows.includes(id); return `<div class="hs2" data-i="${i}"><video ${i ? '' : `src="${s.clip}" autoplay`} data-src="${s.clip}" poster="${IMG(s.img)}" muted playsinline preload="${i ? 'none' : 'auto'}"></video><div class="hsh"></div><div class="hin" data-go="#/story/${id}"><span class="pill pk">Featured series</span><h1>${esc(s.title)}</h1><div class="htag">${esc(s.tagline)}</div><div class="hmeta">${flag(s.country)} · ${s.genre} · ${s.eps} episodes · ${ic('eye').replace('class="i', 'style="width:12px;vertical-align:-2px" class="i')} ${fmt(sv(s))}</div></div><div class="hbtns"><button class="btn pri sm" data-go="#/story/${id}">${icf('play').replace('class="i', 'style="width:12px" class="i')} Watch now</button><button class="btn sm glass" data-act="hList" data-v="${id}" aria-pressed="${S.saved.includes(id)}">${listBtn(S.saved.includes(id))}</button></div></div>`; }).join('')}</div><button class="hmute" data-act="hMute" aria-label="Turn sound on">${ic('mute')}</button><div class="hdots" id="hdots">${HERO.map((_, i) => `<i class="${i ? '' : 'on'}"></i>`).join('')}</div></div>`;
 }
 function initHero() {
   const h = $('#hslides'); if (!h) return; const slides = $$('.hs2', h);
@@ -51,6 +51,7 @@ function peopleRow(p, right) {
   return `<div class="urow"><div class="row grow" style="min-width:0;cursor:pointer" data-go="#/actor/${p.id}">${ring(p.img, 44)}<div style="min-width:0"><b class="un">${esc(p.name)}</b><div class="xs mute ell">@${esc(p.handle)} · ${flag(p.country)} · ${fmt(p.followers)} followers</div></div></div>${right}</div>`;
 }
 const followBtn = id => `<button class="btn sm ${S.aFollows.includes(id) ? '' : 'pri'}" data-act="pFollow" data-v="${id}" style="min-width:84px">${S.aFollows.includes(id) ? 'Following' : 'Follow'}</button>`;
+const listBtn = on => on ? `${ic('check')} Added to list` : '+ My list';
 function home() {
   if (!S.user) return landing();
   if (!HTABS.some(t => t[0] === S.homeTab)) S.homeTab = 'foryou';
@@ -59,6 +60,7 @@ function home() {
   if (T === 'foryou') {
     const tr = [...all].filter(s => !HERO.includes(s.id)).sort((a, b) => sv(b) - sv(a)).slice(0, 9); const nw = nextWatch();
     body = `${heroHtml()}
+    ${S.saved.length ? `${secHead('My list', 'See all', 'data-act="openList"')}<div class="hs">${S.saved.map(id => getStory(id)).filter(Boolean).map(s => vcard(s, { w: 116, h: 150 })).join('')}</div>` : ''}
     ${secHead('Trending stories', 'See all', 'data-act="homeTab" data-v="trending"')}<div class="hs">${tr.map((s, i) => vcard(s, { rank: i + 1 })).join('')}</div>
     ${secHead('Your next watch', '', '')}<div class="xs mute" style="margin:-4px 0 8px">Because you like ${nw.pg.join(' & ')}</div><div class="hs">${nw.list.map(s => vcard(s, { w: 116, h: 150 })).join('')}</div>
     ${secHead('Popular actors', 'See all', 'data-act="homeTab" data-v="actors"')}<div class="hs" style="gap:14px">${ACTORS.map(a => `<div class="center" style="width:62px;flex:none;cursor:pointer" data-go="#/actor/${a.id}">${ring(a.img, 58)}<div class="xs ell" style="margin-top:5px;font-weight:600">${esc(a.name.split(' ')[0])}</div><div class="xs mute">${flag(a.country)}</div></div>`).join('')}</div>
@@ -73,6 +75,8 @@ function home() {
   if (T === 'foryou') initHero();
 }
 Object.assign(H, {
+  hList(el) { if (!need('add to your list')) return; const i = S.saved.indexOf(el.v); i < 0 ? S.saved.push(el.v) : S.saved.splice(i, 1); save(); $$(`[data-act="hList"][data-v="${el.v}"]`).forEach(b => { b.innerHTML = listBtn(i < 0); b.setAttribute('aria-pressed', i < 0); }); toast(i < 0 ? 'Added to My list. Find it in Profile > My list.' : 'Removed from My list.', 2200); },
+  openList() { S.profTab = 'saved'; save(); go('#/profile'); },
   hGenre(el) { S.hGenre = el.v; save(); router(); },
   hMute() { UI.muted = !UI.muted; $$('.hs2 video').forEach(v => v.muted = UI.muted); $('.hmute').innerHTML = ic(UI.muted ? 'mute' : 'volume'); },
 });
@@ -132,7 +136,7 @@ Object.assign(H, {
   rLike(el, e) { if (!need('like videos')) return; H.like({ v: el.v }, true); const b = e.target.closest('button'); const s = getStory(el.v), l = S.likes.includes(el.v); b.classList.toggle('on', l); b.setAttribute('aria-pressed', l); b.innerHTML = ic('heart', l ? 'f' : '') + `<span>${fmt(slikes(s))}</span>`; },
   rCm(el) { openComments(el.v); },
   rShare(el) { H.share({ v: el.v }); },
-  rSave(el, e) { if (!need('save videos')) return; const i = S.saved.indexOf(el.v); i < 0 ? S.saved.push(el.v) : S.saved.splice(i, 1); save(); const b = e.target.closest('button'); b.classList.toggle('on2', i < 0); b.innerHTML = ic('bookmark', i < 0 ? 'f' : ''); toast(i < 0 ? 'Saved.' : 'Removed from saved.', 1400); },
+  rSave(el, e) { if (!need('save videos')) return; const i = S.saved.indexOf(el.v); i < 0 ? S.saved.push(el.v) : S.saved.splice(i, 1); save(); const b = e.target.closest('button'); b.classList.toggle('on2', i < 0); b.innerHTML = ic('bookmark', i < 0 ? 'f' : ''); toast(i < 0 ? 'Added to My list.' : 'Removed from My list.', 1400); },
   rFollow(el) { if (!need('follow people')) return; const i = S.aFollows.indexOf(el.v); i < 0 ? S.aFollows.push(el.v) : S.aFollows.splice(i, 1); save(); $$(`[data-act=rFollow][data-v="${el.v}"]`).forEach(b => b.textContent = i < 0 ? 'Following' : 'Follow'); },
   rMore(el) { sheet(`<h2 class="ddh">More</h2><button class="btn" style="margin-top:6px;justify-content:flex-start;padding-left:14px" data-act="share" data-v="${el.v}">${ic('share')} Share</button><button class="btn" style="margin-top:8px;justify-content:flex-start;padding-left:14px" data-act="report" data-v="${el.v}">${ic('flag')} Report</button><button class="btn" style="margin-top:8px" data-act="closeSheet">Cancel</button>`); },
 });

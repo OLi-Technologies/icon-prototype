@@ -170,7 +170,7 @@ const H = {
   followStory(el) { if (!need('follow stories')) return; const i = S.follows.indexOf(el.v); i < 0 ? S.follows.push(el.v) : S.follows.splice(i, 1); save(); toast(i < 0 ? 'Following. You’ll see it in the Following tab.' : 'Unfollowed.'); router(); },
   followActor(el) { if (!need('follow actors')) return; const i = S.aFollows.indexOf(el.v); i < 0 ? S.aFollows.push(el.v) : S.aFollows.splice(i, 1); save(); router(); },
   like(el, q) { if (!need('like stories')) return; const i = S.likes.indexOf(el.v); i < 0 ? S.likes.push(el.v) : S.likes.splice(i, 1); save(); if (q !== true) router(); },
-  save(el) { if (!need('save stories')) return; const i = S.saved.indexOf(el.v); i < 0 ? S.saved.push(el.v) : S.saved.splice(i, 1); save(); toast(i < 0 ? 'Saved to Watch Later.' : 'Removed from Saved.'); router(); },
+  save(el) { if (!need('save stories')) return; const i = S.saved.indexOf(el.v); i < 0 ? S.saved.push(el.v) : S.saved.splice(i, 1); save(); toast(i < 0 ? 'Added to My list.' : 'Removed from My list.'); router(); },
   play(el) { const [id, n] = el.v.split('|'); play(id, +n); },
   async share(el) {
     const id = el.v, isA = ACTORS.some(a => a.id === id); closeSheet();
