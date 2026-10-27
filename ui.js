@@ -26,7 +26,7 @@ const ring = (img, size = 56, extra = '') => `<span class="ring" style="width:${
 
 /* ---------- Home (Home + Discover) ---------- */
 const HERO = ['s1', 's12', 's5', 's15', 's9'];
-const HTABS = [['foryou', 'For you'], ['trending', 'Trending'], ['new', 'New releases'], ['genre', 'Genre'], ['actors', 'Actors'], ['country', 'Country']];
+const HTABS = [['foryou', 'For you'], ['trending', 'Trending'], ['new', 'New releases'], ['genre', 'Genre'], ['country', 'Country']];
 function prefGenres() {
   const w = {}; const add = (id, wt) => { const s = getStory(id); if (s && s.genre) w[s.genre] = (w[s.genre] || 0) + wt; };
   S.likes.forEach(id => add(id, 3)); S.saved.forEach(id => add(id, 2)); Object.keys(S.views).forEach(k => { if (k.startsWith('p_')) add(k.slice(2), 2); });
@@ -63,7 +63,7 @@ function home() {
     ${S.saved.length ? `${secHead('My list', 'See all', 'data-act="openList"')}<div class="hs">${S.saved.map(id => getStory(id)).filter(Boolean).map(s => vcard(s, { w: 116, h: 150 })).join('')}</div>` : ''}
     ${secHead('Trending stories', 'See all', 'data-act="homeTab" data-v="trending"')}<div class="hs">${tr.map((s, i) => vcard(s, { rank: i + 1 })).join('')}</div>
     ${secHead('Your next watch', '', '')}<div class="xs mute" style="margin:-4px 0 8px">Because you like ${nw.pg.join(' & ')}</div><div class="hs">${nw.list.map(s => vcard(s, { w: 116, h: 150 })).join('')}</div>
-    ${secHead('Popular actors', 'See all', 'data-act="homeTab" data-v="actors"')}<div class="hs" style="gap:14px">${ACTORS.map(a => `<div class="center" style="width:62px;flex:none;cursor:pointer" data-go="#/actor/${a.id}">${ring(a.img, 58)}<div class="xs ell" style="margin-top:5px;font-weight:600">${esc(a.name.split(' ')[0])}</div><div class="xs mute">${flag(a.country)}</div></div>`).join('')}</div>
+    ${secHead('Popular actors')}<div class="hs" style="gap:14px">${ACTORS.map(a => `<div class="center" style="width:62px;flex:none;cursor:pointer" data-go="#/actor/${a.id}">${ring(a.img, 58)}<div class="xs ell" style="margin-top:5px;font-weight:600">${esc(a.name.split(' ')[0])}</div><div class="xs mute">${flag(a.country)}</div></div>`).join('')}</div>
     <div class="cta" data-go="#/create" role="link" tabindex="0">${ic('plusq').replace('class="i', 'style="width:26px;height:26px;color:#c9a8ff" class="i')}<div class="grow"><b>Share your own series</b><div class="xs mute">Record or upload a 60-second episode, 9:16.</div></div>${ic('chevR')}</div>`;
   } else if (T === 'trending') body = egrid([...all].sort((a, b) => sv(b) - sv(a)).slice(0, 18), true);
   else if (T === 'new') body = egrid([...userStories(), ...[...STORIES].reverse()].slice(0, 18));

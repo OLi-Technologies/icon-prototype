@@ -75,7 +75,6 @@ function landing() {
   <p class="gs-p">Act the lead solo or with your friends, share your series with the world and get discovered.</p>
   <div class="gs-feat">${FEAT.map(w => `<div>${ic(w[1])}<span>${w[0]}</span></div>`).join('')}</div>
   <button class="btn pri gs-cta" data-go="#/signup">Get Started ${ic('chevR')}</button>
-  <div class="gs-dots" aria-hidden="true"><i class="on"></i><i></i><i></i><i></i></div>
   <p class="center gs-login">Already have an account? <a href="#/login">Log In</a></p>`, { landing: true });
 }
 const welcome = landing;
