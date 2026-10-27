@@ -594,3 +594,53 @@ nav button.on .me{box-shadow:0 0 0 1.5px #14163a,0 0 0 3px #c58bff}
 .tabs3 button{height:36px;padding:0 10px;border-radius:18px;font-size:14px;color:#a8a6c8;border:0;background:rgba(255,255,255,.06)}
 .tabs3 button.on{background:#f4f2ff;color:#14143a;border:0}
 img.fl,.lbr img.fl,.pod img.fl{width:1.25em;height:.94em;border-radius:2px;object-fit:cover;flex:none}
+
+/* ===== v4: comfortable spacing + Instagram/TikTok type scale ===== */
+.screen{padding:calc(var(--safe-t) + 8px) 16px calc(104px + var(--safe-b))}
+h2{font-size:17px}h3{font-size:15px}
+.sm{font-size:13.5px}.xs{font-size:12px}
+.btn{height:46px;font-size:15px;border-radius:12px}
+.btn.sm{height:34px;font-size:13.5px;border-radius:10px;padding:0 14px}
+.chip{height:34px;padding:0 14px;border-radius:17px;font-size:13.5px}
+.chips{gap:8px}.chips.sub{margin-top:12px}
+.field{height:50px;border-radius:14px;margin-bottom:12px}.field input,.field select{font-size:15px}
+.field.sm2{height:46px;margin:6px 0 10px}
+.card{padding:16px;border-radius:16px}
+.sec{margin:26px 0 12px}.sec h2{font-size:17px}.sec a,.link{font-size:13.5px}
+.hdr{height:50px;margin-bottom:6px}.hbtn{width:40px;height:40px}.hbtn svg.i{width:24px;height:24px}
+.htitle{font-size:17px}.htitle.left{font-size:20px}
+.fc{height:34px;font-size:13.5px;padding:0 12px 0 14px;border-radius:17px;gap:6px}.fc svg.i{width:14px;height:14px}
+.fline{margin:10px -16px 10px;padding:0 16px;gap:8px}
+.tabs{margin:8px -16px 6px;padding:2px 16px;gap:8px}
+.tabs button{font-size:15px;height:38px;padding:0 17px;border-radius:19px}
+.tabs3{margin:8px -16px 6px;padding:4px 16px}.tabs3 button{font-size:14.5px;height:38px}
+.hs{gap:12px}
+.eg{margin:10px -16px 0;gap:3px}
+.egm{font-size:12px;left:8px;bottom:7px}.egt{font-size:12.5px;left:8px;right:8px;bottom:26px;line-height:1.25}.egm svg.i{width:13px;height:13px}
+.urow{padding:11px 0;gap:12px}
+.cta{padding:14px 16px;margin-top:26px;gap:12px;border-radius:16px}.cta b{font-size:15px}
+.hero2{margin:0 -16px;height:390px}.hbtns{left:16px;bottom:18px;gap:10px}
+.stats{padding:14px 0}.stats b{font-size:18px}.stats span{font-size:12.5px}
+.pstats b{font-size:17px}.pstats span{font-size:12.5px}
+.lbr{padding:12px;margin-bottom:10px;gap:12px}.lbr .rk{font-size:18px}.lbr img:not(.fl){width:60px;height:52px}
+.nrow{padding:13px 0;gap:12px}.nrow .nt{font-size:14px;line-height:1.4}
+.cmi{padding:12px 0;gap:11px}.cmt{font-size:14.5px;line-height:1.4}.cmh{font-size:13px}.cmh b{font-size:13.5px}.cmh .mute{font-size:12px}
+.cmlink,.cmview{font-size:12.5px}.cmlk{font-size:12px}.cmhead b{font-size:16px}
+.cmfield{height:42px}.cmfield input{font-size:15px}.cmpost{font-size:14.5px}.cmrb{font-size:12.5px;padding:8px 12px}
+.drow{min-height:54px}.drows .drow{font-size:15px}
+.epr{padding:10px 8px}.eph{font-size:14px}.epd{font-size:12px}.epr .epn{font-size:16px}
+.rinfo{font-size:14px}.rail2{gap:18px;right:10px}.rail2 span{font-size:12.5px}
+nav{height:60px}
+nav button.cr{position:relative;width:64px;height:60px;justify-content:flex-end;padding-bottom:7px}
+nav button.cr .crc{position:absolute;top:-16px;left:50%;margin-left:-25px;width:50px;height:50px;border-radius:50%;display:grid;place-items:center;background:linear-gradient(135deg,#5b34ff 0%,#a43bff 55%,#ff2bd6 100%);color:#fff;box-shadow:0 0 0 5px #0a0a22,0 8px 22px rgba(168,59,255,.55)}
+nav button.cr .crc svg.i{width:26px;height:26px;stroke-width:2.4}
+nav button.cr span{color:#d9a6ff}
+nav button.cr:active .crc{transform:scale(.94)}
+nav button span{font-size:10.5px}
+.hin{left:16px;right:64px;bottom:62px}.hin h1{font-size:28px}.htag{font-size:19px}.hmeta{font-size:12.5px;margin-top:7px}
+.hmute{right:16px;bottom:18px;width:34px;height:34px}.hdots{left:16px;right:16px}
+.shero{margin:0 -16px;height:320px}.sinfo{left:16px;right:16px;bottom:14px}.sinfo h1{font-size:26px}
+.ptabs{margin:0 -16px}.stop{left:14px;right:14px}
+.rinfo{left:16px}
+.clip .rinfo{bottom:96px}
+.rail2{bottom:104px}.player .rail2{bottom:80px}.player .rinfo{bottom:26px}

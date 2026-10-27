@@ -6,7 +6,7 @@ const ordTxt = ['1st', '2nd', '3rd'];
 /* ---------- Floating bottom nav (line icons off, filled icons on, avatar with stroke) ---------- */
 function navBar(a) {
   const b = (id, on, off, l, h) => `<button class="${a === id ? 'on' : ''}" data-go="${h}" aria-label="${l}" ${a === id ? 'aria-current="page"' : ''}>${a === id ? on : off}<span>${l}</span></button>`;
-  return `<nav aria-label="Main">${b('home', ic('home', 'fs'), ic('home'), 'Home', '#/home')}${b('clips', ic('clipsF', 'f'), ic('clips'), 'Clips', '#/clips')}${b('create', ic('plusqF', 'f'), ic('plusq'), 'Create', '#/create')}${b('leaderboard', ic('trophy', 'fs'), ic('trophy'), 'Ranks', '#/leaderboard')}<button class="${a === 'profile' ? 'on' : ''}" data-go="#/profile" aria-label="Profile" ${a === 'profile' ? 'aria-current="page"' : ''}><img class="me" src="${IMG('avatar')}" alt=""><span>Profile</span></button></nav>`;
+  return `<nav aria-label="Main">${b('home', ic('home', 'fs'), ic('home'), 'Home', '#/home')}${b('clips', ic('clipsF', 'f'), ic('clips'), 'Clips', '#/clips')}<button class="cr" data-go="#/create" aria-label="Create"><i class="crc">${ic('plus')}</i><span>Create</span></button>${b('leaderboard', ic('trophy', 'fs'), ic('trophy'), 'Ranks', '#/leaderboard')}<button class="${a === 'profile' ? 'on' : ''}" data-go="#/profile" aria-label="Profile" ${a === 'profile' ? 'aria-current="page"' : ''}><img class="me" src="${IMG('avatar')}" alt=""><span>Profile</span></button></nav>`;
 }
 function header() {
   const n = unread();
