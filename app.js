@@ -3,6 +3,7 @@ const KEY = 'icon.app.v1';
 const DEF = { user: null, accounts: {}, seen: false, follows: [], aFollows: [], friends: [], reqIn: null, reqOut: [], likes: [], saved: [], playlists: [], published: [], comments: {}, cl: {}, views: {}, notifs: [], prefs: { notif: true }, homeTab: 'foryou', homeGenre: 'Romance', hGenre: 'All', hCountry: 'All', cr: {}, drafts: [], followers: null, nf: null, cam: { facing: 'user', roll: true }, profTab: 'stories', upFilter: 'All', upSort: 'Latest', disc: { tab: 'All', genre: 'All Genres', loc: 'Global', sort: 'Trending', period: 'All Time', q: '' }, lb: { entity: 'Stories', rank: 'Most Watched', genre: 'All', geo: 'Global', period: 'This Week' } };
 let S;
 try { S = Object.assign(structuredClone(DEF), JSON.parse(localStorage.getItem(KEY) || '{}')); } catch { S = structuredClone(DEF); }
+try { if (S.user && S.remember === false && !sessionStorage.getItem('icon.alive')) S.user = null; } catch { }
 const save = () => { try { localStorage.setItem(KEY, JSON.stringify(S)); } catch { } };
 const Blobs = new Map(); // pid:ep -> object URL (kept in memory only)
 const app = $('#app');
@@ -115,19 +116,21 @@ function signup(err = {}, v = {}) {
     if (!er.email && S.accounts[d.email.toLowerCase()]) er.email = 'We couldn’t create an account with these details. Try logging in.';
     if (Object.keys(er).length) return signup(er, d);
     const salt = Math.random().toString(36).slice(2, 12); const hash = await sha2(salt, d.pw); const em = d.email.toLowerCase();
-    S.accounts[em] = { hash, salt, username: d.username, name: d.username, dob: `${d.yr}-${d.mo}-${d.dy}`, country: d.country, city: '', gender: d.gender, gender_other: d.gender === 'Prefer to self-describe' ? d.gother.trim() : '', id: 'u' + Date.now().toString(36), joined: new Date().toISOString() }; startSession(em); save();
+    S.accounts[em] = { hash, salt, username: d.username, name: d.username, dob: `${d.yr}-${d.mo}-${d.dy}`, country: d.country, city: '', gender: d.gender, gender_other: d.gender === 'Prefer to self-describe' ? d.gother.trim() : '', id: 'u' + Date.now().toString(36), joined: new Date().toISOString() }; S.remember = true; S.lastId = d.username; try { sessionStorage.setItem("icon.alive", "1"); } catch { } startSession(em); save();
   });
 }
 function login(err = '') {
   shell(`${authHead('Welcome Back', 'Log in to keep creating.')}<form id="lf" novalidate>
-  <label class="field ${err ? 'bad' : ''}">${ic('user')}<input name="email" type="text" placeholder="Email or username" autocomplete="username" autocapitalize="none" aria-label="Email or username"></label>
+  <label class="field ${err ? 'bad' : ''}">${ic('user')}<input name="email" type="text" placeholder="Email or username" autocomplete="username" autocapitalize="none" aria-label="Email or username" value="${esc(S.lastId || '')}"></label>
   <label class="field ${err ? 'bad' : ''}">${ic('lock')}<input name="pw" type="password" placeholder="Password" autocomplete="current-password" aria-label="Password"><button type="button" data-act="eye" aria-label="Show password">${ic('eye')}</button></label>
+  <label class="row" style="gap:8px;margin:2px 2px 10px;font-size:13px;align-items:center"><input type="checkbox" name="remember" ${S.remember === false ? '' : 'checked'} style="width:18px;height:18px;accent-color:#7c4dff"> Remember me on this device</label>
   ${err ? `<div class="err-t" role="alert">${err}</div>` : ''}<button class="btn pri" type="submit" style="margin-top:6px">Log In ${ic('chevR')}</button></form>
   <p class="center mute" style="margin-top:16px">New here? <a href="#/signup">Create an account</a></p>`);
   $('#lf').addEventListener('submit', async e => {
     e.preventDefault(); const d = Object.fromEntries(new FormData(e.target)); const id = (d.email || '').trim().toLowerCase();
     const em = S.accounts[id] ? id : Object.keys(S.accounts).find(k => (S.accounts[k].username || '').toLowerCase() === id); const a = em && S.accounts[em];
     if (!a || !a.hash || a.hash !== (a.salt ? await sha2(a.salt, d.pw || '') : await sha(d.pw || ''))) return login('Username/email or password is incorrect.');
+    S.remember = !!d.remember; S.lastId = S.remember ? (a.username || id) : ''; try { sessionStorage.setItem('icon.alive', '1'); } catch { }
     startSession(em);
   });
 }
