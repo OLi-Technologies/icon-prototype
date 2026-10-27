@@ -644,3 +644,18 @@ nav button span{font-size:10.5px}
 .rinfo{left:16px}
 .clip .rinfo{bottom:96px}
 .rail2{bottom:104px}.player .rail2{bottom:80px}.player .rinfo{bottom:26px}
+
+/* ===== Get started (landing) ===== */
+.screen.gsl{padding:0 20px calc(18px + var(--safe-b));background:#07071c;display:flex;flex-direction:column}
+.gs-hero{margin:0 -20px;position:relative;-webkit-mask-image:linear-gradient(#000 82%,transparent);mask-image:linear-gradient(#000 82%,transparent)}
+.gs-hero img{display:block;width:100%;height:auto}
+.gs-h{font-size:30px;line-height:1.08;text-align:center;font-weight:800;letter-spacing:-.4px;margin:-34px 0 0;position:relative}
+.gs-p{font-size:15px;line-height:1.45;color:#e6e4ff;text-align:center;margin:14px 6px 0}
+.gs-feat{display:grid;grid-template-columns:repeat(4,1fr);margin:20px -6px 0}
+.gs-feat div{display:flex;flex-direction:column;align-items:center;gap:8px;text-align:center;font-size:12px;line-height:1.25;color:#d9d7f5;padding:2px 4px;border-left:1px solid rgba(255,255,255,.1)}
+.gs-feat div:first-child{border-left:0}
+.gs-feat svg.i{width:28px;height:28px;color:#a35bff;stroke-width:1.6}
+.gs-cta{height:54px;border-radius:27px;font-size:17px;font-weight:700;margin-top:22px}
+.gs-dots{display:flex;justify-content:center;gap:9px;margin:16px 0 0}.gs-dots i{width:9px;height:9px;border-radius:50%;background:rgba(255,255,255,.22)}.gs-dots i.on{background:#ff2bd6}
+.gs-login{margin:14px 0 0;font-size:14px}
+.screen.gsl>*{flex:none}.gs-p{font-size:14.5px}

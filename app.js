@@ -40,9 +40,9 @@ const closeSheet = () => $('.overlay')?.remove();
 const unread = () => (window.unreadN ? unreadN() : 0);
 
 /* ---------- render shell ---------- */
-function shell(inner, { nav = null, noNav = false, flush = false } = {}) {
+function shell(inner, { nav = null, noNav = false, flush = false, landing = false } = {}) {
   const sc = $('.screen'); const top = sc && sc.dataset.h === location.hash ? sc.scrollTop : 0;
-  app.innerHTML = `<div class="screen ${nav ? '' : 'noNav'} ${flush ? 'flush' : ''}" data-h="${location.hash}">${inner}</div>${nav ? navBar(nav) : ''}`;
+  app.innerHTML = `<div class="screen ${nav ? '' : 'noNav'} ${flush ? 'flush' : ''} ${landing ? 'gsl' : ''}" data-h="${location.hash}">${inner}</div>${nav ? navBar(nav) : ''}`;
   const n = $('.screen'); if (top) n.scrollTop = top;
 }
 const poster = (img, inner = '', cls = '', style = '', tl = '') => `<div class="poster ${cls}" style="${style}"><img src="${IMG(img)}" alt="" loading="lazy">${tl ? `<div class="tl">${tl}</div>` : ''}<div class="in">${inner}</div></div>`;
@@ -69,20 +69,14 @@ function ddOpen(id) {
 /* ---------- Welcome / Auth ---------- */
 const WEL = [['AI Generates Unique Scripts', 'wand', 'AI-powered storytelling for everyone. Write less. Create more. Be an ICON.'], ['Act Solo or with Friends', 'users', 'Perform alone or invite friends. One continuous take per episode.'], ['Create on Your Phone', 'film', 'Record, preview and publish straight from your phone. No editing suite.'], ['Share & Be Discovered', 'globe', 'Act. Be Famous. Win. Climb city, country and global leaderboards.']];
 function landing() {
-  const FEAT = [['Write Your Stories', 'edit'], ['Act Solo or with Friends', 'users'], ['Record & Edit on Your Phone', 'film'], ['Share to the World', 'globe']];
-  shell(`<div class="row" style="justify-content:center;margin-top:2px">${logo(58)}</div>
-  <div class="collage" style="height:292px" aria-hidden="true">
-   ${poster('man', '', '', 'left:-10px;top:14px;width:132px;height:190px;transform:rotate(-4deg)')}
-   ${poster('smile', '', '', 'left:92px;top:34px;width:200px;height:230px;transform:rotate(-7deg);z-index:2')}
-   ${poster('church2', '', '', 'right:12px;top:0;width:104px;height:116px;transform:rotate(6deg)')}
-   ${poster('beyond', '', '', 'right:-4px;top:128px;width:120px;height:150px;transform:rotate(6deg)')}
-   <div class="hand" style="position:absolute;right:84px;top:176px;font-size:21px;line-height:1.15;transform:rotate(-10deg);z-index:3;width:156px;text-shadow:0 2px 8px rgba(0,0,0,.6)">Your Story. Your Act. Your Audience.</div>
-   <div class="xs" style="position:absolute;left:30px;top:150px;line-height:1.75;letter-spacing:.8px;color:#d9d7f5;z-index:3">ROMANCE<br>COMEDY<br>DRAMA<br>HORROR<br>THRILLER<br>MYSTERY<br>AND MORE</div></div>
-  <h1 style="font-size:30px;margin-top:4px">Write<br><span class="gt">Your Stories.</span></h1>
-  <p style="font-size:14px;line-height:1.4;margin:8px 0 10px;color:#e6e4ff">Create your own stories, act with or without friends, and share to the world.</p>
-  <div class="feat">${FEAT.map(w => `<div>${ic(w[1])}${w[0]}</div>`).join('')}</div>
-  <button class="btn pri" style="margin-top:14px" data-go="#/signup">Get Started</button>
-  <p class="center" style="margin:16px 0 0">Already have an account? <a href="#/login">Log In</a></p>`);
+  const FEAT = [['Write<br>Your Stories', 'edit'], ['Play the Lead<br>or with Friends', 'users'], ['Create & Share<br>to the World', 'film'], ['Be<br>Discovered', 'star']];
+  shell(`<div class="gs-hero"><img src="img/gs-hero.jpg" alt="ICON: Act. Be Famous. Win."></div>
+  <h1 class="gs-h">Write and play<br>on <span class="gt">your own stories.</span></h1>
+  <p class="gs-p">Act the lead solo or with your friends, share your series with the world and get discovered.</p>
+  <div class="gs-feat">${FEAT.map(w => `<div>${ic(w[1])}<span>${w[0]}</span></div>`).join('')}</div>
+  <button class="btn pri gs-cta" data-go="#/signup">Get Started ${ic('chevR')}</button>
+  <div class="gs-dots" aria-hidden="true"><i class="on"></i><i></i><i></i><i></i></div>
+  <p class="center gs-login">Already have an account? <a href="#/login">Log In</a></p>`, { landing: true });
 }
 const welcome = landing;
 function authHead(title, sub) { return `<div class="row sp"><button class="iconbtn" style="border:0;background:none" data-act="back" aria-label="Back">${ic('chevL')}</button><a href="#/${title.startsWith('Create') ? 'login' : 'signup'}" style="font-weight:600;text-decoration:none;color:#a98bff">${title.startsWith('Create') ? 'Log In' : 'Sign Up'}</a></div><div class="center" style="margin:-4px 0 20px">${logo(54)}</div><h1 class="center" style="font-size:21px">${title}</h1><p class="center mute" style="margin:6px 0 20px">${sub}</p>`; }
