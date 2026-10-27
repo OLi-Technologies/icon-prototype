@@ -26,7 +26,7 @@ const ring = (img, size = 56, extra = '') => `<span class="ring" style="width:${
 
 /* ---------- Home (Home + Discover) ---------- */
 const HERO = ['s1', 's12', 's5', 's15', 's9'];
-const HTABS = [['foryou', 'For you'], ['trending', 'Trending'], ['new', 'New releases']];
+const HTABS = [['foryou', 'For you'], ['trending', 'Trending'], ['new', 'New releases'], ['actors', 'Actors']];
 function prefGenres() {
   const w = {}; const add = (id, wt) => { const s = getStory(id); if (s && s.genre) w[s.genre] = (w[s.genre] || 0) + wt; };
   S.likes.forEach(id => add(id, 3)); S.saved.forEach(id => add(id, 2)); Object.keys(S.views).forEach(k => { if (k.startsWith('p_')) add(k.slice(2), 2); });
@@ -53,12 +53,12 @@ function peopleRow(p, right) {
 const followBtn = id => `<button class="btn sm ${S.aFollows.includes(id) ? '' : 'pri'}" data-act="pFollow" data-v="${id}" style="min-width:84px">${S.aFollows.includes(id) ? 'Following' : 'Follow'}</button>`;
 function home() {
   if (!S.user) return landing();
-  if (!HTABS.some(t => t[0] === S.homeTab) && S.homeTab !== 'actors') S.homeTab = 'foryou';
+  if (!HTABS.some(t => t[0] === S.homeTab)) S.homeTab = 'foryou';
   const T = S.homeTab; let body = '';
   const all = allStories();
   const g = S.hGenre || 'All', c = S.hCountry || 'All'; const filt = g !== 'All' || c !== 'All'; const fl = l => l.filter(s => (g === 'All' || s.genre === g || (s.tags || []).includes(g)) && (c === 'All' || s.country === c));
-  const fbar = `<div class="fline">${filterChip('hg', { label: 'Genre', title: 'Genre', options: [['All', 'All genres'], ...GENRES.map(x => x[0])], value: g, onChange: v => { S.hGenre = v; save(); router(); } })}${countryDD('hc', c, v => { S.hCountry = v; save(); router(); })}${filt ? '<button class="fc clr" data-act="hClear" aria-label="Clear filters">Clear</button>' : ''}</div>`;
-  if (T === 'actors') body = `<button class="tlink" data-act="homeTab" data-v="foryou" style="margin:8px 0 2px">‹ Back to For you</button><h2 style="font-size:16px;margin:4px 0">Popular actors</h2><div>${PEOPLE.filter(p => p.actor).map(p => peopleRow(p, followBtn(p.id))).join('')}</div>`;
+  const nf = (g !== 'All') + (c !== 'All'); const fbar = `<div class="fline"><button type="button" class="fc ${nf ? 'on' : ''}" data-act="hFilter" aria-haspopup="dialog" aria-label="Filter${nf ? ', ' + nf + ' active' : ''}">${ic('sliders')} Filter${nf ? ` · ${nf}` : ''}</button>${g !== 'All' ? `<span class="fc tag">${esc(g)}</span>` : ''}${c !== 'All' ? `<span class="fc tag">${flag(c)} ${esc(c)}</span>` : ''}${nf ? '<button class="fc clr" data-act="hClear" aria-label="Clear filters">Clear</button>' : ''}</div>`;
+  if (T === 'actors') body = `<div style="margin-top:6px">${PEOPLE.filter(p => p.actor && (c === 'All' || p.country === c)).map(p => peopleRow(p, followBtn(p.id))).join('')}</div>`;
   else if (T === 'foryou' && !filt) {
     const tr = [...all].filter(s => !HERO.includes(s.id)).sort((a, b) => sv(b) - sv(a)).slice(0, 9); const nw = nextWatch();
     body = `${heroHtml()}
@@ -70,11 +70,21 @@ function home() {
   else if (T === 'new') body = egrid(fl([...userStories(), ...[...STORIES].reverse()]).slice(0, 18));
   else body = egrid(fl([...all].sort((a, b) => sv(b) - sv(a))));
   if (!body.includes('class="eg') && !body.includes('hero2') && T !== 'actors') body = '<div class="empty" style="padding:40px 0">No series match these filters yet.</div>';
-  shell(`${header()}${T === 'actors' ? '' : tabsRow(HTABS, T, 'homeTab') + fbar}${body}`, { nav: 'home' });
+  shell(`${header()}${tabsRow(HTABS, T, 'homeTab')}${fbar}${body}`, { nav: 'home' });
   if (T === 'foryou' && !filt) initHero();
 }
 Object.assign(H, {
   hGenre(el) { S.hGenre = el.v; save(); router(); },
+  hFilter() {
+    let g = S.hGenre || 'All', c = S.hCountry || 'All';
+    const o = sheet(`<h2 class="ddh">Filter</h2><div class="xs mute" style="margin:4px 0 6px">Genre</div><div class="fchips" id="fg">${['All', ...GENRES.map(x => x[0])].map(x => `<button type="button" class="chip" data-v="${x}">${x === 'All' ? 'All genres' : x}</button>`).join('')}</div><div class="xs mute" style="margin:12px 0 6px">Country</div><div class="fchips" id="fc2">${['All', ...CNAMES].map(x => `<button type="button" class="chip" data-v="${x}">${x === 'All' ? '<span class="fl fg"></span> All countries' : flag(x) + ' ' + x}</button>`).join('')}</div><div class="row" style="gap:8px;margin-top:14px"><button class="btn grow" id="fReset">Reset</button><button class="btn pri grow" id="fApply">Show results</button></div>`);
+    const paint = () => { $$('#fg .chip', o).forEach(b => b.classList.toggle('on', b.dataset.v === g)); $$('#fc2 .chip', o).forEach(b => b.classList.toggle('on', b.dataset.v === c)); };
+    $('#fg', o).onclick = e => { const b = e.target.closest('.chip'); if (b) { g = b.dataset.v; paint(); } };
+    $('#fc2', o).onclick = e => { const b = e.target.closest('.chip'); if (b) { c = b.dataset.v; paint(); } };
+    $('#fReset', o).onclick = () => { g = 'All'; c = 'All'; paint(); };
+    $('#fApply', o).onclick = () => { S.hGenre = g; S.hCountry = c; save(); closeSheet(); router(); };
+    paint();
+  },
   hClear() { S.hGenre = 'All'; S.hCountry = 'All'; save(); router(); },
   hMute() { UI.muted = !UI.muted; $$('.hs2 video').forEach(v => v.muted = UI.muted); $('.hmute').innerHTML = ic(UI.muted ? 'mute' : 'volume'); },
 });

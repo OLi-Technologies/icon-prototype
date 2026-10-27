@@ -583,3 +583,6 @@ nav button.on .me{box-shadow:0 0 0 1.5px #14163a,0 0 0 3px #c58bff}
 .zlab.show{opacity:1}
 .camstage{touch-action:none}
 .fc.clr{color:#c58bff;border-color:transparent;background:none}
+.fchips{display:flex;flex-wrap:wrap;gap:6px;max-height:22vh;overflow-y:auto}
+.fchips .chip{height:28px;padding:0 10px;font-size:12px}
+.fc.tag{background:rgba(124,77,255,.18);border-color:transparent;color:#d9c8ff;cursor:default}
