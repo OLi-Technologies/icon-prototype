@@ -8,7 +8,7 @@ function c2Reset(keepSeries) {
   Object.assign(C2, { blob: null, url: null, dur: 0, kind: 'camera', w: 0, h: 0, cropNote: '', state: 'init', fx: 'none', caption: '', pos: 'bottom', E: null, seriesMode: sm, seriesId: sid, seriesTitle: '', seriesDesc: '', showSD: false, genre: '', epTitle: '', epDesc: '', showED: false, cast: [], country: '', thumb: '', audience: 'public', rights: false, draftId: null, keepUrl: false });
 }
 const limitS = () => Server.uploadLimit(S.user);
-const stopCam = () => { clearInterval(C2.iv); try { C2.rec && C2.rec.state !== 'inactive' && (C2.rec.onstop = null, C2.rec.stop()); } catch { } C2.stream?.getTracks().forEach(t => t.stop()); C2.stream = null; C2.rec = null; };
+const stopCam = () => { clearInterval(C2.iv); clearInterval(C2.cvIv); try { C2.rec && C2.rec.state !== 'inactive' && (C2.rec.onstop = null, C2.rec.stop()); } catch { } C2.stream?.getTracks().forEach(t => t.stop()); C2.stream = null; C2.rec = null; };
 window.stopCam = stopCam;
 const probeV = url => new Promise(res => { const m = document.createElement('video'); m.preload = 'metadata'; m.muted = true; m.onloadedmetadata = () => { const fin = d => res({ d: isFinite(d) ? d : 0, w: m.videoWidth, h: m.videoHeight }); if (m.duration === Infinity) { m.currentTime = 1e101; m.ontimeupdate = () => { m.ontimeupdate = null; fin(m.duration); }; } else fin(m.duration); }; m.onerror = () => res({ d: 0, w: 0, h: 0 }); m.src = url; });
 const ratioLabel = (w, h) => { if (!w || !h) return ''; const r = w / h; if (Math.abs(r - 9 / 16) < .02) return ''; return r > 1.6 ? '16:9' : r > 1.2 ? '4:3' : r > .9 ? '1:1' : r > .7 ? '4:5' : r > .6 ? '3:4' : 'other'; };
@@ -26,23 +26,41 @@ window.createRoute = a => {
 function camView() {
   const lim = limitS(); const st = C2.state; const ready = st === 'ready' || st === 'rec'; const rec = st === 'rec'; const existing = C2.seriesMode === 'existing' && S.published.find(p => p.id === C2.seriesId);
   const rollOk = S.cam.roll;
-  shell(`<div class="cam2"><div class="camstage">${ready ? `<video id="cv" playsinline muted autoplay style="transform:${S.cam.facing === 'user' ? 'scaleX(-1)' : 'none'};filter:${fxCss(newEdits(0, C2.fx))}"></video>` : ''}${C2.caption ? `<div class="capov ${C2.pos}">${esc(C2.caption)}</div>` : ''}
+  shell(`<div class="cam2"><div class="camstage">${ready ? `<video id="cv" playsinline muted autoplay style="transform:${camTf()};filter:${fxCss(newEdits(0, C2.fx))}"></video>` : ''}${C2.caption ? `<div class="capov ${C2.pos}">${esc(C2.caption)}</div>` : ''}
     ${!ready ? `<div class="camoff"><div>${ic(st === 'init' ? 'camera' : 'camera').replace('class="i', 'style="width:34px;height:34px;color:#b388ff" class="i')}<p class="sm" style="margin:8px 0 12px">${st === 'init' ? 'Starting camera…' : st === 'denied' ? 'Camera access was blocked. Allow it in your browser settings, or upload a video.' : st === 'unsupported' ? 'This device can’t record in the browser. Upload a video instead.' : 'No camera found. Upload a video instead.'}</p><div class="camact">${st !== 'init' ? `<button class="btn sm pri" data-act="cRetry">Try camera again</button>` : ''}<button class="btn sm" data-act="cSample">Try a sample clip</button></div></div></div>` : ''}
     <div class="camtop"><button class="cbtn" data-act="cClose" aria-label="Close">${ic('x')}</button><div class="camttl">${rec ? `<span class="rect"><i></i><span id="rt">0:00</span> / ${fmtT(lim).replace(/^0/, '')}</span>` : existing ? `Episode ${(existing.episodes || []).length + 1} · ${esc(existing.title)}` : 'New episode'}</div><button class="cbtn" data-act="cSettings" aria-label="Camera settings" ${rec ? 'disabled' : ''}>${ic('gear')}</button></div>
     <div class="camnote">${ic('film').replace('class="i', 'style="width:13px" class="i')} Up to <b>${lim}s</b> · <b>9:16</b> only. Other ratios are cropped.</div>
     ${ready && !rec ? `<div class="camrail">${[['flip', 'Flip', 'cFlip'], ['wand', C2.fx === 'none' ? 'Filters' : FILTERS.find(f => f[0] === C2.fx)[1], 'cFilters'], ['textaa', 'Text', 'cText'], ['timer', C2.timer ? '3s' : 'Timer', 'cTimer']].map(b => `<button data-act="${b[2]}" aria-label="${b[1]}" class="${(b[2] === 'cFilters' && C2.fx !== 'none') || (b[2] === 'cText' && C2.caption) || (b[2] === 'cTimer' && C2.timer) ? 'on' : ''}"><span>${ic(b[0])}</span>${b[1]}</button>`).join('')}</div>` : ''}
     <div id="cd" class="cdown" style="display:none"></div>
+    ${ready ? `<div class="zlab" id="zlab">${(C2.zoom || 1).toFixed(1).replace('.0', '')}×</div><div class="zp" role="group" aria-label="Zoom">${zoomLevels().map(z => `<button data-act="cZoom" data-v="${z}" data-z="${z}" class="${Math.abs((C2.zoom || 1) - z) < 0.05 ? 'on' : ''}" aria-label="Zoom ${z}x">${z}×</button>`).join('')}</div>` : ''}
     <div class="cambot"><label class="gal ${rollOk ? '' : 'off'} ${rec ? 'dis' : ''}" ${rollOk ? '' : 'data-act="cRollOff"'} aria-label="Upload a video"><span>${ic('image')}</span>Upload${rollOk && !rec ? '<input type="file" accept="video/*" id="fup" hidden>' : ''}</label>
       <button class="shut ${rec ? 'live' : ''}" data-act="${rec ? 'cStop' : 'cStart'}" aria-label="${rec ? 'Stop recording' : 'Start recording'}" ${ready ? '' : 'disabled'}><svg viewBox="0 0 80 80"><circle cx="40" cy="40" r="35" class="trk"/><circle cx="40" cy="40" r="35" class="prg" id="ring" transform="rotate(-90 40 40)"/></svg><i></i></button>
       <div class="gal" style="visibility:hidden"></div></div></div>`, { nav: null, flush: true });
-  const v = $('#cv'); if (v && C2.stream) { v.srcObject = C2.stream; v.play().catch(() => { }); }
+  const v = $('#cv'); if (v && C2.stream) { v.srcObject = C2.stream; v.play().catch(() => { }); bindZoom(); }
   $('#fup')?.addEventListener('change', async e => { const f = e.target.files[0]; if (!f) return; await loadFile(f); });
   if (st === 'init' && !C2.stream && !C2.asked) { C2.asked = true; openCam(); }
+}
+const zoomInfo = () => { const t = C2.stream && C2.stream.getVideoTracks()[0]; let z = null; try { z = t && t.getCapabilities && t.getCapabilities().zoom; } catch { } return z ? { hw: true, min: Math.max(0.5, z.min), max: Math.min(5, z.max) } : { hw: false, min: 1, max: 5 }; };
+const zoomHw = z => { const i = zoomInfo(); if (!i.hw) return; try { C2.stream.getVideoTracks()[0].applyConstraints({ advanced: [{ zoom: Math.max(i.min, Math.min(i.max, z)) }] }).catch(() => { }); } catch { } };
+const camTf = () => `${S.cam.facing === 'user' ? 'scaleX(-1) ' : ''}scale(${zoomInfo().hw ? 1 : (C2.zoom || 1)})`;
+function setZoom(z) { const i = zoomInfo(); z = Math.round(Math.max(i.min, Math.min(i.max, z)) * 100) / 100; C2.zoom = z; if (i.hw) zoomHw(z); else { const v = $('#cv'); if (v) v.style.transform = camTf(); } const lv = zoomLevels(); $$('.zp button').forEach(b => b.classList.toggle('on', Math.abs(+b.dataset.z - z) === Math.min(...lv.map(x => Math.abs(x - z))))); const zl = $('#zlab'); if (zl) { zl.textContent = z.toFixed(1).replace('.0', '') + '×'; zl.classList.add('show'); clearTimeout(C2.zt); C2.zt = setTimeout(() => zl.classList.remove('show'), 900); } }
+const zoomLevels = () => { const i = zoomInfo(); return [0.5, 1, 2, 3].filter(x => x >= i.min - 0.01 && x <= i.max); };
+function bindZoom() {
+  const st = $('.camstage'); if (!st) return; let d0 = 0, z0 = 1;
+  const dist = t => Math.hypot(t[0].clientX - t[1].clientX, t[0].clientY - t[1].clientY);
+  st.addEventListener('touchstart', e => { if (e.touches.length === 2) { d0 = dist(e.touches); z0 = C2.zoom || 1; } }, { passive: true });
+  st.addEventListener('touchmove', e => { if (e.touches.length === 2 && d0) { e.preventDefault(); setZoom(z0 * dist(e.touches) / d0); } }, { passive: false });
+  st.addEventListener('touchend', () => { d0 = 0; }, { passive: true });
+  st.addEventListener('wheel', e => { e.preventDefault(); setZoom((C2.zoom || 1) * (e.deltaY < 0 ? 1.1 : 0.9)); }, { passive: false });
 }
 async function openCam() {
   stopCam(); C2.state = 'init';
   if (!navigator.mediaDevices?.getUserMedia || !window.MediaRecorder) { C2.state = 'unsupported'; return route.name === 'create' && !route.args[0] && camView(); }
-  try { C2.stream = await Promise.race([navigator.mediaDevices.getUserMedia({ video: { facingMode: S.cam.facing, width: { ideal: 720 }, height: { ideal: 1280 }, aspectRatio: { ideal: 9 / 16 } }, audio: { echoCancellation: true, noiseSuppression: true } }), new Promise((_, rj) => setTimeout(() => rj({ name: 'Timeout' }), 6000))]); C2.state = 'ready'; }
+  try {
+    const gum = v => navigator.mediaDevices.getUserMedia({ video: v, audio: { echoCancellation: true, noiseSuppression: true } });
+    /* Ask for the widest native frame (landscape 16:9). Forcing a 9:16 size makes phones digitally crop in, which looked zoomed. We crop to 9:16 ourselves. */
+    C2.stream = await Promise.race([gum({ facingMode: S.cam.facing, width: { ideal: 1920 }, height: { ideal: 1080 } }).catch(e => e.name === 'NotAllowedError' ? Promise.reject(e) : gum({ facingMode: S.cam.facing })), new Promise((_, rj) => setTimeout(() => rj({ name: 'Timeout' }), 6000))]); C2.state = 'ready'; C2.zoom = 1; zoomHw(1);
+  }
   catch (e) { C2.state = e.name === 'NotAllowedError' ? 'denied' : 'nocam'; }
   if (route.name === 'create' && !route.args[0]) camView();
 }
@@ -58,6 +76,7 @@ Object.assign(H, {
   cRetry() { C2.asked = true; C2.state = 'init'; camView(); openCam(); },
   cRollOff() { toast('Camera roll access is off. Turn it on in camera settings.', 3200); },
   async cSample() { stopCam(); const url = 'v/k1.mp4'; const m = await probeV(url); Object.assign(C2, { blob: null, url, kind: 'sample', dur: m.d || 8, w: m.w, h: m.h, cropNote: '', E: null, keepUrl: true }); go('#/create/crop'); },
+  cZoom(el) { setZoom(+(el.v || el.z)); },
   cFlip() { S.cam.facing = S.cam.facing === 'user' ? 'environment' : 'user'; save(); C2.asked = true; openCam(); },
   cFilters() { filterPicker(C2.fx, v => { C2.fx = v; camView(); }); },
   cTimer() { C2.timer = !C2.timer; camView(); },
@@ -73,7 +92,8 @@ Object.assign(H, {
   async cStart() {
     if (C2.state !== 'ready' || !C2.stream) return; const lim = limitS();
     if (C2.timer) { const cd = $('#cd'); cd.style.display = 'grid'; for (let i = 3; i > 0; i--) { cd.textContent = i; await new Promise(r => setTimeout(r, 800)); if (!$('#cd')) return; } cd.style.display = 'none'; }
-    C2.chunks = []; C2.mime = mimeFor(); try { C2.rec = new MediaRecorder(C2.stream, C2.mime ? { mimeType: C2.mime } : undefined); } catch { return toast('This device can’t record here. Use Upload.', 4000); }
+    C2.chunks = []; C2.mime = mimeFor(); let rs = C2.stream; if (!zoomInfo().hw) { const cv = document.createElement('canvas'); cv.width = 720; cv.height = 1280; const cx = cv.getContext('2d'); const draw = () => { const v = $('#cv'); if (!v || !v.videoWidth) return; const vw = v.videoWidth, vh = v.videoHeight; let sw = Math.min(vw, vh * 9 / 16), sh = sw * 16 / 9; if (sh > vh) { sh = vh; sw = sh * 9 / 16; } const z = C2.zoom || 1; sw /= z; sh /= z; cx.drawImage(v, (vw - sw) / 2, (vh - sh) / 2, sw, sh, 0, 0, 720, 1280); }; draw(); C2.cvIv = setInterval(draw, 33); rs = cv.captureStream(30); C2.stream.getAudioTracks().forEach(t => rs.addTrack(t)); }
+    try { C2.rec = new MediaRecorder(rs, C2.mime ? { mimeType: C2.mime } : undefined); } catch { return toast('This device can’t record here. Use Upload.', 4000); }
     C2.rec.ondataavailable = e => e.data.size && C2.chunks.push(e.data);
     C2.rec.onstop = async () => { clearInterval(C2.iv); const d = Math.min(lim, Math.max(1, Math.round((Date.now() - C2.t0) / 1000))); const blob = new Blob(C2.chunks, { type: C2.mime || 'video/webm' }); stopCam(); if (!blob.size) { C2.state = 'init'; C2.asked = false; camView(); return toast('Nothing was recorded. Try again.'); } Object.assign(C2, { blob, url: URL.createObjectURL(blob), kind: 'camera', dur: d, w: 720, h: 1280, cropNote: '', E: null, state: 'init', asked: false }); go('#/create/crop'); };
     C2.rec.start(500); C2.t0 = Date.now(); C2.state = 'rec'; camView(); C2.stream.getTracks().forEach(t => t.onended = () => C2.state === 'rec' && H.cStop());
