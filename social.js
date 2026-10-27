@@ -165,20 +165,46 @@ Object.assign(H, { lbTab(el) { S.lb.entity = el.v; save(); router(); } });
 function profile() { return route.args && route.args[0] === 'edit' ? editProfile() : profileMain(); }
 function editProfile() {
   const u = S.user; if (!u) return go('#/profile');
+  const acc = S.accounts[u.email]; const [by, bm, bdd] = ((acc && acc.dob) || '').split('-'); const bd = { yr: by || '', mo: bm || '', dy: bdd || '' }; const yrs = []; const Y = new Date().getFullYear(); for (let y = Y - 18; y >= Y - 100; y--) yrs.push(y);
   shell(`${topBack('Edit profile')}
   <div class="center" style="margin:10px 0 16px"><div style="position:relative;display:inline-block;cursor:pointer" data-act="photo" role="button" tabindex="0" aria-label="Change profile photo"><span class="ring" style="width:84px;height:84px"><img src="${IMG('avatar')}" alt=""></span><span class="camb">${ic('camera').replace('class="i', 'style="width:12px" class="i')}</span></div><div><button class="tlink" data-act="photo" style="margin-top:8px">Change photo</button></div></div>
   <div class="lrow"><label for="epName">Name</label></div><label class="field sm2"><input id="epName" maxlength="40" value="${esc(u.name || '')}" placeholder="Your name" autocomplete="name" aria-label="Name"></label>
   <div class="lrow" style="margin-top:12px"><label>Username</label></div><div class="xs mute" style="margin:0 2px 8px">@${esc(u.handle || u.username || '')} · usernames can’t be changed in this prototype</div>
   ${dd('ep-country', { label: 'Country', title: 'Country', options: CNAMES, value: u.country || 'Philippines', compact: true, onChange: v => { const e = $('#epFl'); if (e) e.innerHTML = flag(v) + ' ' + esc(v); } })}
   <div class="xs mute" style="margin:8px 2px 0;display:flex;align-items:center;gap:6px">Shown on your profile as <span id="epFl">${flag(u.country || 'Philippines')} ${esc(u.country || 'Philippines')}</span></div>
+  <div class="lrow" style="margin-top:16px"><label>Date of birth</label><span class="xs mute">Private. 18+ only</span></div>
+  <div class="row" style="gap:10px;align-items:stretch">${[['mo', 'Month', ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'].map((m, i) => [i + 1, m])], ['dy', 'Day', Array.from({ length: 31 }, (_, i) => i + 1)], ['yr', 'Year', yrs]].map(([k, l, o]) => `<div style="flex:1;min-width:0">${dd('ep-' + k, { label: l, title: 'Select ' + l.toLowerCase(), options: o, value: bd[k], ph: l, compact: true, onChange: () => {} })}</div>`).join('')}</div>
+  <div class="lrow" style="margin-top:16px"><label>Gender</label><span class="xs mute">Private</span></div>
+  ${dd('ep-gender', { label: 'Gender', title: 'Gender', options: GENDERS, value: u.gender || (acc && acc.gender) || '', ph: 'Select', compact: true, onChange: v => { const w = $('#epgo'); if (w) w.style.display = v === 'Prefer to self-describe' ? 'block' : 'none'; } })}
+  <div id="epgo" style="display:${(u.gender || (acc && acc.gender)) === 'Prefer to self-describe' ? 'block' : 'none'}"><label class="field sm2">${ic('edit')}<input id="epGoT" maxlength="40" placeholder="How do you describe your gender?" value="${esc((acc && acc.gender_other) || '')}"></label></div>
   <button class="btn pri" style="margin-top:18px" data-act="saveProfile">Save changes</button>`, { nav: 'profile' });
 }
 Object.assign(H, {
   editProfile() { go('#/profile/edit'); },
   saveProfile() {
     const u = S.user, nm = ($('#epName').value || '').trim(); if (nm.length < 2) return toast('Enter a name (at least 2 characters).');
-    const c = (DD['ep-country'] && DD['ep-country'].value) || u.country; u.name = nm; u.country = c;
-    const a = S.accounts[u.email]; if (a) { a.name = nm; a.country = c; }
+    const c = (DD['ep-country'] && DD['ep-country'].value) || u.country; const g = (DD['ep-gender'] && DD['ep-gender'].value) || '';
+    const mo = DD['ep-mo'].value, dy = DD['ep-dy'].value, yr = DD['ep-yr'].value; let dob = '';
+    if (mo || dy || yr) { if (!mo || !dy || !yr) return toast('Select your full date of birth, or clear it.', 2600); const b = new Date(yr, mo - 1, dy); if (b.getMonth() !== mo - 1) return toast('That date doesn’t exist.'); const t = new Date(); let age = t.getFullYear() - b.getFullYear(); if (t < new Date(t.getFullYear(), b.getMonth(), b.getDate())) age--; if (age < 18) return toast('ICON is currently 18+ only during the supervised beta.', 3200); dob = `${yr}-${mo}-${dy}`; }
+    const go2 = g === 'Prefer to self-describe' ? ($('#epGoT').value || '').trim() : ''; if (g === 'Prefer to self-describe' && !go2) return toast('Tell us how you describe your gender.', 2600);
+    u.name = nm; u.country = c; u.gender = g;
+    const a = S.accounts[u.email]; if (a) { a.name = nm; a.country = c; a.dob = dob; a.gender = g; a.gender_other = go2; }
     save(); toast('Profile updated.'); go('#/profile');
   },
+});
+
+Object.assign(H, {
+  socialAuth(el) {
+    const k = el.v, nm = SOCN[k], em = socEmail(k), has = !!S.accounts[em];
+    sheet(`<h2 class="ddh">${nm}</h2><div class="xs mute" style="margin:2px 0 12px">Prototype demo: this simulates the ${nm} account chooser. In the live app it opens ${nm}’s secure sign-in, and no password is typed here.</div>
+    <div class="socme">${SOCI[k]}<div class="grow"><b>Alex Rivera</b><div class="xs mute">${em}</div></div></div>
+    <button class="btn pri" style="margin-top:14px" data-act="socGo" data-v="${k}">${has ? 'Log in' : 'Continue'} as Alex</button><button class="btn" style="margin-top:8px" data-act="closeSheet">Cancel</button>`);
+  },
+  socGo(el) {
+    const k = el.v, em = socEmail(k); closeSheet();
+    if (S.accounts[em]) { S.remember = true; S.lastId = S.accounts[em].username; try { sessionStorage.setItem('icon.alive', '1'); } catch { } return startSession(em); }
+    let u = 'alex.rivera', n = 1; while (Object.values(S.accounts).some(a => (a.username || '').toLowerCase() === u)) u = 'alex.rivera' + (++n);
+    S.pendSoc = { provider: k, name: 'Alex Rivera', email: em, username: u }; save(); go('#/signup/social');
+  },
+  socCancel() { S.pendSoc = null; save(); go('#/signup'); },
 });

@@ -81,19 +81,45 @@ function landing() {
 const welcome = landing;
 function authHead(title, sub) { return `<div class="row sp"><button class="iconbtn" style="border:0;background:none" data-act="back" aria-label="Back">${ic('chevL')}</button><a href="#/${title.startsWith('Create') ? 'login' : 'signup'}" style="font-weight:600;text-decoration:none;color:#a98bff">${title.startsWith('Create') ? 'Log In' : 'Sign Up'}</a></div><div class="center" style="margin:-4px 0 20px">${logo(54)}</div><h1 class="center" style="font-size:21px">${title}</h1><p class="center mute" style="margin:6px 0 20px">${sub}</p>`; }
 const sha2 = async (salt, pw) => sha(salt + '|' + pw);
+
+/* ---------- Quick sign-in (simulated providers) ---------- */
+const SOCI = {
+  google: '<svg viewBox="0 0 24 24" width="20" height="20"><path fill="#4285F4" d="M23.5 12.27c0-.85-.08-1.67-.22-2.45H12v4.64h6.45a5.5 5.5 0 0 1-2.39 3.62v3h3.87c2.27-2.09 3.57-5.17 3.57-8.81z"/><path fill="#34A853" d="M12 24c3.24 0 5.95-1.07 7.93-2.91l-3.87-3a7.17 7.17 0 0 1-10.7-3.76H1.3v3.1A12 12 0 0 0 12 24z"/><path fill="#FBBC05" d="M5.36 14.33a7.2 7.2 0 0 1 0-4.66v-3.1H1.3a12 12 0 0 0 0 10.86z"/><path fill="#EA4335" d="M12 4.76c1.76 0 3.34.61 4.59 1.8l3.44-3.44A11.5 11.5 0 0 0 12 0 12 12 0 0 0 1.3 6.57l4.06 3.1A7.17 7.17 0 0 1 12 4.76z"/></svg>',
+  apple: '<svg viewBox="0 0 24 24" width="20" height="20" fill="#fff"><path d="M12.152 6.896c-.948 0-2.415-1.078-3.96-1.04-2.04.027-3.91 1.183-4.961 3.014-2.117 3.675-.546 9.103 1.519 12.09 1.013 1.454 2.208 3.09 3.792 3.039 1.52-.065 2.09-.987 3.935-.987 1.831 0 2.35.987 3.96.948 1.637-.026 2.676-1.48 3.676-2.948 1.156-1.688 1.636-3.325 1.662-3.415-.039-.013-3.182-1.221-3.22-4.857-.026-3.04 2.48-4.494 2.597-4.559-1.429-2.09-3.623-2.324-4.39-2.376-2-.156-3.675 1.09-4.61 1.09zM15.53 3.83c.843-1.012 1.4-2.427 1.245-3.83-1.207.052-2.662.805-3.532 1.818-.78.896-1.454 2.338-1.273 3.714 1.338.104 2.715-.688 3.559-1.701"/></svg>',
+  facebook: '<svg viewBox="0 0 24 24" width="20" height="20" fill="#1877F2"><path d="M9.101 23.691v-7.98H6.627v-3.667h2.474v-1.58c0-4.085 1.848-5.978 5.858-5.978.401 0 .955.042 1.468.103a8.68 8.68 0 0 1 1.141.195v3.325a8.623 8.623 0 0 0-.653-.036 26.805 26.805 0 0 0-.733-.009c-.707 0-1.259.096-1.675.309a1.686 1.686 0 0 0-.679.622c-.258.42-.374.995-.374 1.752v1.297h3.919l-.386 2.103-.287 1.564h-3.246v8.245C19.396 23.238 24 18.179 24 12.044c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.628 3.874 10.35 9.101 11.647Z"/></svg>'
+};
+const SOCN = { google: 'Google', apple: 'Apple', facebook: 'Facebook' };
+const socialBtns = (verb = 'Continue') => `<div class="soc">${Object.keys(SOCN).map(k => `<button type="button" class="socb" data-act="socialAuth" data-v="${k}">${SOCI[k]}<span>${verb} with ${SOCN[k]}</span></button>`).join('')}</div><div class="socor"><i></i><span>or use email</span><i></i></div>`;
+const socEmail = k => k === 'apple' ? 'alex.rivera@privaterelay.appleid.com' : k === 'facebook' ? 'alex.rivera@facebook.com' : 'alex.rivera@gmail.com';
+function socialSignup(err = {}) {
+  const p = S.pendSoc; if (!p) return go('#/signup');
+  const yrs = []; const Y = new Date().getFullYear(); for (let y = Y - 18; y >= Y - 100; y--) yrs.push(y);
+  const v = p.v || {};
+  shell(`<div class="row sp"><button class="iconbtn" style="border:0;background:none" data-act="socCancel" aria-label="Back">${ic('chevL')}</button></div>
+  <h1 class="center" style="font-size:22px;margin-top:6px">Almost there</h1><p class="center mute" style="margin:6px 0 18px">Pick a username to finish setting up your account.</p>
+  <div class="socme">${SOCI[p.provider]}<div class="grow"><b>${esc(p.name)}</b><div class="xs mute">${esc(p.email)}</div></div><span class="xs mute">${SOCN[p.provider]}</span></div>
+  <form id="ssf" novalidate>
+  <label class="field ${err.username ? 'bad' : ''}">${ic('user')}<input name="username" placeholder="Username" value="${esc(v.username || p.username)}" autocomplete="off" autocapitalize="none" aria-label="Username"></label>${err.username ? `<div class="err-t" role="alert">${err.username}</div>` : ''}
+  <label class="row" style="margin:6px 0 ${err.terms ? 4 : 18}px;align-items:flex-start;font-size:14px"><input type="checkbox" name="terms" ${v.terms ? 'checked' : ''} style="width:20px;height:20px;accent-color:#7c4dff;margin-top:2px"><span>I am 18 or older and accept the <a href="#/legal/terms">Terms</a> and <a href="#/legal/privacy">Privacy Policy</a>.</span></label>${err.terms ? `<div class="err-t" role="alert">${err.terms}</div>` : ''}
+  <button class="btn pri" type="submit">Create account ${ic('chevR')}</button></form>`);
+  $('#ssf').addEventListener('submit', e => {
+    e.preventDefault(); const d = Object.fromEntries(new FormData(e.target)); d.terms = !!$('[name=terms]').checked; const er = {}; d.username = (d.username || '').trim();
+    if (!/^[A-Za-z0-9._]{3,20}$/.test(d.username)) er.username = 'Use 3 to 20 letters, numbers, dots or underscores.';
+    else if (Object.values(S.accounts).some(a => (a.username || '').toLowerCase() === d.username.toLowerCase())) er.username = 'That username is taken. Try another.';
+    if (!d.terms) er.terms = 'Please accept the Terms and Privacy Policy.';
+    if (Object.keys(er).length) { p.v = d; save(); return socialSignup(er); }
+    const em = p.email.toLowerCase();
+    S.accounts[em] = { hash: null, social: p.provider, username: d.username, name: p.name, dob: '', country: 'Philippines', city: '', gender: '', gender_other: '', id: 'u' + Date.now().toString(36), joined: new Date().toISOString() };
+    S.pendSoc = null; S.remember = true; S.lastId = d.username; try { sessionStorage.setItem('icon.alive', '1'); } catch { } startSession(em); save();
+  });
+}
 function signup(err = {}, v = {}) {
   const yrs = []; const Y = new Date().getFullYear(); for (let y = Y - 18; y >= Y - 100; y--) yrs.push(y);
   const f = (k, i, ph, type = 'text', extra = '', ac = 'off') => `<label class="field ${err[k] ? 'bad' : ''}">${ic(i)}<input name="${k}" type="${type}" placeholder="${ph}" value="${esc(v[k] || '')}" autocomplete="${ac}" autocapitalize="none" aria-label="${ph}">${extra}</label>${err[k] ? `<div class="err-t" role="alert">${err[k]}</div>` : ''}`;
   const other = v.gender === 'Prefer to self-describe';
   shell(`${authHead('Create Your Account', 'Join a global community of creators and storytellers.')}
-  <form id="sf" novalidate>${f('username', 'user', 'Username', 'text', '', 'username')}${f('email', 'mail', 'Email Address', 'email', '', 'email')}${f('pw', 'lock', 'Password (8+ characters)', 'password', `<button type="button" data-act="eye" aria-label="Show password">${ic('eye')}</button>`, 'new-password')}
-  <div class="row" style="margin:6px 0 8px;color:#e6e4ff">${ic('cal')}<span>Date of Birth</span></div>
-  <div class="row" style="gap:10px;margin-bottom:6px;align-items:stretch">${[['mo', 'Month', ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'].map((m, i) => [i + 1, m])], ['dy', 'Day', Array.from({ length: 31 }, (_, i) => i + 1)], ['yr', 'Year', yrs]].map(([k, l, o]) => `<div style="flex:1;min-width:0">${dd('dob-' + k, { label: l, title: 'Select ' + l.toLowerCase(), options: o, value: v[k], ph: l, compact: true, onChange: x => { $('[name=' + k + ']').value = x; } })}<input type="hidden" name="${k}" value="${esc(v[k] || '')}"></div>`).join('')}</div>
-  <div class="xs mute" style="margin-bottom:${err.dob ? 4 : 14}px">You must be at least 18 years old to join the ICON beta.</div>${err.dob ? `<div class="err-t" role="alert">${err.dob}</div>` : ''}
-  <div class="row" style="gap:10px;align-items:stretch;margin-bottom:${err.country || err.gender ? 4 : 12}px"><div style="flex:1;min-width:0">${dd('su-country', { label: 'Country', title: 'Country', options: CNAMES, value: v.country, ph: 'Select', onChange: x => { $('[name=country]').value = x; } })}<input type="hidden" name="country" value="${esc(v.country || '')}"></div><div style="flex:1;min-width:0">${dd('su-gender', { label: 'Gender', title: 'Gender', options: GENDERS, value: v.gender, ph: 'Select', onChange: x => { $('[name=gender]').value = x; $('#gotherw').style.display = x === 'Prefer to self-describe' ? 'block' : 'none'; if (x === 'Prefer to self-describe') $('[name=gother]').focus(); } })}<input type="hidden" name="gender" value="${esc(v.gender || '')}"></div></div>
-  ${err.country ? `<div class="err-t" role="alert">${err.country}</div>` : ''}${err.gender ? `<div class="err-t" role="alert">${err.gender}</div>` : ''}
-  <div id="gotherw" style="display:${other ? 'block' : 'none'}"><label class="field ${err.gother ? 'bad' : ''}">${ic('edit')}<input name="gother" maxlength="40" placeholder="How do you describe your gender?" value="${esc(v.gother || '')}" aria-label="Self-described gender"></label>${err.gother ? `<div class="err-t" role="alert">${err.gother}</div>` : ''}</div>
-  <label class="row" style="margin:6px 0 ${err.terms ? 4 : 18}px;align-items:flex-start;font-size:14px"><input type="checkbox" name="terms" ${v.terms ? 'checked' : ''} style="width:24px;height:24px;accent-color:#7c4dff;flex:none"> <span>I agree to the <a href="#/legal/terms">Terms of Service</a> and <a href="#/legal/privacy">Privacy Policy</a>. My username, stories and country are public. My email, birth date and gender are not.</span></label>${err.terms ? `<div class="err-t" role="alert">${err.terms}</div>` : ''}
+  ${socialBtns('Sign up')}<form id="sf" novalidate>${f('username', 'user', 'Username', 'text', '', 'username')}${f('email', 'mail', 'Email Address', 'email', '', 'email')}${f('pw', 'lock', 'Password (8+ characters)', 'password', `<button type="button" data-act="eye" aria-label="Show password">${ic('eye')}</button>`, 'new-password')}
+  <label class="row" style="margin:6px 0 ${err.terms ? 4 : 18}px;align-items:flex-start;font-size:14px"><input type="checkbox" name="terms" ${v.terms ? 'checked' : ''} style="width:24px;height:24px;accent-color:#7c4dff;flex:none"> <span>I am 18 or older and agree to the <a href="#/legal/terms">Terms of Service</a> and <a href="#/legal/privacy">Privacy Policy</a>.</span></label>${err.terms ? `<div class="err-t" role="alert">${err.terms}</div>` : ''}
   <button class="btn pri" type="submit">Create Account ${ic('chevR')}</button></form>
   <p class="center mute" style="margin-top:16px">Already have an account? <a href="#/login">Log In</a></p>`);
   $('#sf').addEventListener('submit', async e => {
@@ -103,18 +129,15 @@ function signup(err = {}, v = {}) {
     else if (Object.values(S.accounts).some(a => (a.username || '').toLowerCase() === d.username.toLowerCase())) er.username = 'That username is taken. Try another.';
     if (!/^\S+@\S+\.\S+$/.test(d.email)) er.email = 'Enter a valid email address.';
     if ((d.pw || '').length < 8) er.pw = 'Use at least 8 characters.';
-    if (!d.mo || !d.dy || !d.yr) er.dob = 'Select your full date of birth.'; else { const b = new Date(d.yr, d.mo - 1, d.dy); if (b.getMonth() !== d.mo - 1) er.dob = 'That date doesn’t exist.'; else { const a = new Date(); let age = a.getFullYear() - b.getFullYear(); if (a < new Date(a.getFullYear(), b.getMonth(), b.getDate())) age--; if (age < 18) er.dob = 'ICON is currently 18+ only during the supervised beta.'; } }
-    if (!d.country) er.country = 'Select the country you are based in.';
-    if (!d.gender) er.gender = 'Select a gender option.'; else if (d.gender === 'Prefer to self-describe' && !(d.gother || '').trim()) er.gother = 'Tell us how you describe your gender.';
     if (!d.terms) er.terms = 'Please accept the Terms and Privacy Policy.';
     if (!er.email && S.accounts[d.email.toLowerCase()]) er.email = 'We couldn’t create an account with these details. Try logging in.';
     if (Object.keys(er).length) return signup(er, d);
     const salt = Math.random().toString(36).slice(2, 12); const hash = await sha2(salt, d.pw); const em = d.email.toLowerCase();
-    S.accounts[em] = { hash, salt, username: d.username, name: d.username, dob: `${d.yr}-${d.mo}-${d.dy}`, country: d.country, city: '', gender: d.gender, gender_other: d.gender === 'Prefer to self-describe' ? d.gother.trim() : '', id: 'u' + Date.now().toString(36), joined: new Date().toISOString() }; S.remember = true; S.lastId = d.username; try { sessionStorage.setItem("icon.alive", "1"); } catch { } startSession(em); save();
+    S.accounts[em] = { hash, salt, username: d.username, name: d.username, dob: '', country: 'Philippines', city: '', gender: '', gender_other: '', id: 'u' + Date.now().toString(36), joined: new Date().toISOString() }; S.remember = true; S.lastId = d.username; try { sessionStorage.setItem("icon.alive", "1"); } catch { } startSession(em); save();
   });
 }
 function login(err = '') {
-  shell(`${authHead('Welcome Back', 'Log in to keep creating.')}<form id="lf" novalidate>
+  shell(`${authHead('Welcome Back', 'Log in to keep creating.')}${socialBtns('Continue')}<form id="lf" novalidate>
   <label class="field ${err ? 'bad' : ''}">${ic('user')}<input name="email" type="text" placeholder="Email or username" autocomplete="username" autocapitalize="none" aria-label="Email or username" value="${esc(S.lastId || '')}"></label>
   <label class="field ${err ? 'bad' : ''}">${ic('lock')}<input name="pw" type="password" placeholder="Password" autocomplete="current-password" aria-label="Password"><button type="button" data-act="eye" aria-label="Show password">${ic('eye')}</button></label>
   <label class="row" style="gap:8px;margin:2px 2px 10px;font-size:13px;align-items:center"><input type="checkbox" name="remember" ${S.remember === false ? '' : 'checked'} style="width:18px;height:18px;accent-color:#7c4dff"> Remember me on this device</label>
@@ -241,7 +264,7 @@ function router() {
   if (r === 'create' && !isAuthed()) { navAfterAuth = h; toast('Log in or create an account to create stories.'); return signup(); }
   if (r === 'create') return window.createRoute(route.args);
   if (r === 'discover') return go('#/home');
-  ({ welcome, signup: () => signup(), login: () => login(), home, clips, search: () => searchPage(), leaderboard, profile, plans, notifications, story: () => story(parts[1]), actor: () => actor(parts[1]), legal: () => legal(parts[1]), people: () => peopleView(parts[1]) }[r] || home)();
+  ({ welcome, signup: () => parts[1] === 'social' ? socialSignup() : signup(), login: () => login(), home, clips, search: () => searchPage(), leaderboard, profile, plans, notifications, story: () => story(parts[1]), actor: () => actor(parts[1]), legal: () => legal(parts[1]), people: () => peopleView(parts[1]) }[r] || home)();
 }
 window.addEventListener('hashchange', router);
 if ('serviceWorker' in navigator && location.protocol.startsWith('http')) navigator.serviceWorker.register('sw.js').catch(() => { });
