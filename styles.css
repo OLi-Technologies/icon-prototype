@@ -821,3 +821,5 @@ nav button span{font-size:10.5px}
 .lbtop .pstrip{justify-content:space-between;gap:6px}
 :root[data-theme=light] .pstrip .p1{color:#8a5500}:root[data-theme=light] .pstrip .p2{color:#3f4870}:root[data-theme=light] .pstrip .p3{color:#8a3d0c}
 .lbtop .pstrip{padding:6px 6px;gap:4px}.lbtop .pstrip b{font-size:11px}.lbtop .tabs button{padding:0 10px}
+.lbtop .pstrip b{font-size:10.5px;letter-spacing:-.1px}.lbtop .pstrip{gap:3px;padding:6px 5px}.lbtop .tabs{margin-right:2px}
+.lbtop .pstrip>svg:last-child{display:none}.lbtop .pstrip{justify-content:space-around}
