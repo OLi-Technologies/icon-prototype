@@ -815,3 +815,23 @@ nav button span{font-size:10.5px}
 .pstrip{gap:7px;padding:6px 8px}
 :root[data-theme=light] .pstrip .xs{color:#8a5500!important}
 :root[data-theme=light] .pstrip .p1{color:#8a5500}:root[data-theme=light] .pstrip .p2{color:#3f4870}:root[data-theme=light] .pstrip .p3{color:#8a3d0c}
+
+/* ---------- Profile redesign ---------- */
+.phead{gap:14px;align-items:center;margin:6px 0 14px}
+.pact{display:flex;align-items:center;gap:0;margin-top:10px}
+.pact button{display:inline-flex;align-items:center;gap:7px;font-size:13px;font-weight:600;padding:4px 10px 4px 0;text-transform:capitalize}
+.pact button svg.i{width:19px;height:19px}
+.pact i{width:1px;height:22px;background:var(--line);margin:0 10px 0 0}
+.pact button:last-child{padding-right:0}
+.pstat{display:grid;grid-template-columns:repeat(5,1fr);border:1px solid var(--line);border-radius:20px;padding:12px 4px;background:var(--card)}
+.pstat .pst{position:relative;text-align:center}
+.pstat .pst+.pst::before{content:'';position:absolute;left:0;top:8px;bottom:8px;width:1px;background:var(--line)}
+.pst .psi{display:block;margin:0 auto 4px}.pst .psi svg.i{width:20px;height:20px}
+.pstat .pst b{font-size:17px}.pstat .pst span:last-child{font-size:11px}
+.ptp{display:flex;gap:8px;margin:14px 0 4px}
+.ptp button{flex:1;height:40px;border-radius:20px;border:1px solid var(--line);font-size:13px;font-weight:600;color:var(--text);background:transparent}
+.ptp button.on{background:var(--grad);border-color:transparent;color:#fff}
+.pempty{text-align:center;padding:34px 10px 20px;display:flex;flex-direction:column;align-items:center}
+.pempty b{font-size:20px;margin-top:6px}.pempty p{color:var(--mute);font-size:14.5px;line-height:1.5;margin:8px 0 18px}
+.pempty .btn{height:50px;padding:0 26px;border-radius:25px}
+.pact button{white-space:nowrap;font-size:12.5px;gap:5px;padding-right:8px}.pact button span{white-space:nowrap}.pact i{margin-right:8px}.pact button svg.i{width:18px;height:18px}
