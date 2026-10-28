@@ -726,3 +726,22 @@ nav button span{font-size:10.5px}
 .cblk{padding:14px 16px calc(14px + var(--safe-b));text-align:center;font-size:13px;color:var(--mute);border-top:1px solid var(--line);display:flex;flex-direction:column;align-items:center;flex:none}
 .qrx{display:flex;justify-content:space-between;background:var(--card2);border-radius:26px;padding:6px 8px;margin:0 0 8px}.qrx button{font-size:26px;width:46px;height:46px;border-radius:50%}.qrx button.on{background:rgba(160,91,255,.35)}
 .pview{position:absolute;inset:0;z-index:95;background:rgba(0,0,0,.92);display:grid;place-items:center}.pview img{max-width:100%;max-height:100%;object-fit:contain}.pview .hbtn{position:absolute;top:calc(var(--safe-t) + 10px);right:10px;background:rgba(255,255,255,.15)}
+
+/* ---------- Gifts (demo) ---------- */
+.gold{color:#ffc83d}
+.gifthd{gap:10px;margin:4px 0 10px;align-items:center}
+.balchip{background:rgba(255,200,61,.14);border:1px solid rgba(255,200,61,.45);color:#ffd966;border-radius:16px;padding:5px 11px;font-size:13px;font-weight:700;display:flex;gap:5px;align-items:center}
+.stt{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.stt button{background:var(--card2);border:1.5px solid var(--line);border-radius:14px;padding:10px 4px;display:flex;flex-direction:column;align-items:center;gap:2px;position:relative;color:#fff}
+.stt button.on{border-color:#a05bff;background:rgba(124,77,255,.22)}
+.stt .stn{font-weight:800;font-size:14px}.stt .gem{font-size:30px;line-height:1.1}
+.stt .sv{position:absolute;top:-8px;right:6px;background:var(--grad);font-size:9.5px;font-weight:800;border-radius:8px;padding:1px 6px}
+.paym{display:flex;gap:8px}.paym button{flex:1;height:40px;border-radius:12px;background:var(--card2);border:1.5px solid var(--line);font-weight:700;font-size:13px;color:#fff}.paym button.on{border-color:#a05bff;background:rgba(124,77,255,.22)}
+.scard{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:14px;margin:8px 0}
+.scard.earn{background:linear-gradient(var(--card),var(--card)) padding-box,linear-gradient(135deg,rgba(255,200,61,.6),rgba(255,43,214,.5)) border-box;border:1.5px solid transparent}
+.sbig{font-size:26px;font-weight:800;margin-top:2px}
+.giftrow{margin:2px 0 10px;background:var(--card);border-radius:14px;padding:10px 12px}
+.rail2 .giftb.sent{color:#ffc83d}
+.sburst{position:absolute;inset:0;z-index:92;pointer-events:none;overflow:hidden}
+.sburst i{position:absolute;bottom:-40px;font-style:normal;animation:sb 1.5s ease-out forwards}
+@keyframes sb{0%{transform:translateY(0) scale(.6);opacity:0}15%{opacity:1}100%{transform:translateY(-82vh) scale(1.2) rotate(18deg);opacity:0}}

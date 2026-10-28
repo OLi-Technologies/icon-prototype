@@ -263,7 +263,7 @@ function router() {
   if (r === 'create' && !isAuthed()) { navAfterAuth = h; toast('Log in or create an account to create stories.'); return signup(); }
   if (r === 'create') return window.createRoute(route.args);
   if (r === 'discover') return go('#/home');
-  ({ welcome, signup: () => parts[1] === 'social' ? socialSignup() : signup(), login: () => login(), home, clips, search: () => searchPage(), leaderboard, profile, plans, notifications, story: () => story(parts[1]), actor: () => actor(parts[1]), legal: () => legal(parts[1]), people: () => peopleView(parts[1]), messages: () => window.messagesRoute(parts.slice(1)) }[r] || home)();
+  ({ welcome, signup: () => parts[1] === 'social' ? socialSignup() : signup(), login: () => login(), home, clips, search: () => searchPage(), leaderboard, profile, plans, notifications, story: () => story(parts[1]), actor: () => actor(parts[1]), legal: () => legal(parts[1]), people: () => peopleView(parts[1]), messages: () => window.messagesRoute(parts.slice(1)), gifts: () => window.giftsRoute() }[r] || home)();
 }
 window.addEventListener('hashchange', router);
 if ('serviceWorker' in navigator && location.protocol.startsWith('http')) navigator.serviceWorker.register('sw.js').catch(() => { });
