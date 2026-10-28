@@ -10,7 +10,7 @@ function navBar(a) {
 }
 function header() {
   const n = unread();
-  return `<div class="hdr"><div data-go="#/home" class="hlogo" role="link" aria-label="ICON home">${logo(22, false)}</div><div class="row" style="gap:0"><button class="hbtn" data-go="#/search" aria-label="Search">${ic('search')}</button><button class="hbtn" style="position:relative" data-go="#/notifications" aria-label="Notifications${n ? ', ' + n + ' new' : ''}">${ic('bell')}${n ? `<span class="dot">${Math.min(n, 9)}</span>` : ''}</button></div></div>`;
+  return `<div class="hdr"><div data-go="#/home" class="hlogo" role="link" aria-label="ICON home">${logo(22, false)}</div><div class="row" style="gap:0"><button class="hbtn" data-go="#/search" aria-label="Search">${ic('search')}</button><button class="hbtn" style="position:relative" data-go="#/messages" aria-label="Messages${msgUnread() ? ', ' + msgUnread() + ' unread' : ''}">${ic('msg')}${msgUnread() ? `<span class="dot">${Math.min(msgUnread(), 9)}</span>` : ''}</button><button class="hbtn" style="position:relative" data-go="#/notifications" aria-label="Notifications${n ? ', ' + n + ' new' : ''}">${ic('bell')}${n ? `<span class="dot">${Math.min(n, 9)}</span>` : ''}</button></div></div>`;
 }
 const topBack = (title, right = '') => `<div class="hdr"><button class="hbtn" data-act="back" aria-label="Back">${ic('chevL')}</button><b class="htitle">${title}</b><div class="hside">${right}</div></div>`;
 const tabsRow = (list, cur, act) => `<div class="tabs" role="tablist">${list.map(t => `<button role="tab" aria-selected="${cur === t[0]}" class="${cur === t[0] ? 'on' : ''}" data-act="${act}" data-v="${t[0]}">${t[1]}</button>`).join('')}</div>`;
@@ -114,10 +114,11 @@ function story(id) {
 /* ---------- Actor / person page ---------- */
 function actor(id) {
   const a = person(id); if (!a) return go('#/home'); const f = S.aFollows.includes(id); const st = STORIES.filter(s => s.cast.includes(id));
-  shell(`${topBack('@' + esc(a.handle), `<button class="hbtn" data-act="report" data-v="${id}" aria-label="Report">${ic('flag')}</button>`)}
+  const blk = (S.blocked || []).includes(id);
+  shell(`${topBack('@' + esc(a.handle), `<button class="hbtn" data-act="profMenu" data-v="${id}" aria-label="More options">${ic('dots')}</button>`)}
   <div class="row" style="gap:16px;margin:6px 0 10px">${ring(a.img, 76)}<div class="grow"><div class="pstats"><div><b>${st.length}</b><span>Series</span></div><div><b>${fmt(a.followers + (f ? 1 : 0))}</b><span>Followers</span></div><div><b>${fmt(st.reduce((t, s) => t + s.views, 0))}</b><span>Views</span></div></div></div></div>
   <div><b>${esc(a.name)}</b></div><div class="xs mute" style="margin:2px 0 10px">${flag(a.country)} ${esc(a.country)}${a.actor ? ` · #${ACTORS.indexOf(ACTORS.find(x => x.id === id)) + 1} actor` : ''}</div>
-  <div class="row" style="gap:8px"><button class="btn sm ${f ? '' : 'pri'} grow" style="height:32px" data-act="pFollow" data-v="${id}">${f ? 'Following' : 'Follow'}</button><button class="btn sm grow" style="height:32px" data-act="share" data-v="${id}">Share profile</button></div>
+  ${blk ? `<div class="cblk" style="margin:0">You blocked ${esc(a.name)}. They can’t message you.<button class="btn sm" data-act="unblock" data-v="${id}" style="margin:8px auto 0">Unblock</button></div>` : `<div class="row" style="gap:8px"><button class="btn sm ${f ? '' : 'pri'} grow" style="height:32px" data-act="pFollow" data-v="${id}">${f ? 'Following' : 'Follow'}</button><button class="btn sm grow" style="height:32px" data-act="msgStart" data-v="${id}">${ic('msg')} Message</button><button class="btn sm" style="height:32px;width:36px;padding:0" data-act="share" data-v="${id}" aria-label="Share profile">${ic('share')}</button></div>`}
   ${secHead('Series')}${st.length ? egrid(st) : '<div class="empty">No public series yet.</div>'}`, { nav: 'home' });
 }
 
