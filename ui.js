@@ -167,22 +167,20 @@ function play(id, n) {
 
 /* ---------- Clips: vertical 9:16 feed ---------- */
 function clipItem(c) {
-  return `<section class="clip" data-id="${c.id}" aria-label="${esc(c.cap)}"><video data-src="${c.src}" poster="${IMG(c.img)}" muted playsinline loop preload="none"></video><div class="shade"></div><span class="bigplay cpp" style="display:none">${icf('play')}</span><span class="hpop">${icf('heart')}</span>${reelBody(c, 1)}<div class="pbar"><i></i></div></section>`;
+  const n = +c.id.slice(1), im = IMG(c.img);
+  return `<section class="clip" data-id="${c.id}" aria-label="${esc(c.cap)}"><div class="kbg" style="background-image:url(${im})"></div><div class="kframe"><img class="kimg ka${n % 4}" src="${im}" alt="" draggable="false"></div><div class="shade"></div><span class="bigplay cpp" style="display:none">${icf('play')}</span><span class="hpop">${icf('heart')}</span>${reelBody(c, 1)}<div class="pbar"><i></i></div></section>`;
 }
 function clips() {
-  shell(`<div class="ctop"><h2>Clips</h2><div class="row" style="gap:0"><button class="hbtn" data-act="cSound" id="csound" aria-label="Sound">${ic(UI.muted ? 'mute' : 'volume')}</button><button class="hbtn" data-go="#/search" aria-label="Search">${ic('search')}</button><button class="hbtn" data-go="#/create" aria-label="Record a clip">${ic('camera')}</button></div></div><div class="clips" id="clips">${CLIPS.map(clipItem).join('')}</div>`, { nav: 'clips', flush: true });
+  shell(`<div class="ctop"><h2>Clips</h2><div class="row" style="gap:0"><button class="hbtn" data-go="#/search" aria-label="Search">${ic('search')}</button><button class="hbtn" data-go="#/create" aria-label="Record a clip">${ic('camera')}</button></div></div><div class="clips" id="clips">${CLIPS.map(clipItem).join('')}</div>`, { nav: 'clips', flush: true });
   const root = $('#clips'); const secs = $$('.clip', root); let cur = null;
-  const load = sc => { const v = $('video', sc); if (v && !v.getAttribute('src')) v.src = v.dataset.src; return v; };
   const activate = sc => {
-    secs.forEach(x => { if (x !== sc) { const v = $('video', x); if (v) { v.pause(); } } }); cur = sc; const v = load(sc); v.muted = UI.muted; v.play().catch(() => { });
-    const i = secs.indexOf(sc); if (secs[i + 1]) load(secs[i + 1]);
+    secs.forEach(x => { if (x !== sc) x.classList.remove('on'); }); cur = sc; sc.classList.add('on'); const pi = $('.pbar i', sc); pi.style.animation = 'none'; void pi.offsetWidth; pi.style.animation = '';
     clearTimeout(sc._t); sc._t = setTimeout(() => { const c = getStory(sc.dataset.id), k = 'q_' + c.id, now = Date.now(); if (cur === sc && viewOk(k, now)) { S.views[k] = now; S.views['add_' + c.id] = (S.views['add_' + c.id] || 0) + 1; save(); const w = $('.vw-' + c.id, sc); if (w) w.textContent = fmt(sv(c)); } }, 3000);
   };
   const io = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) activate(e.target); }), { root, threshold: [.7] });
-  secs.forEach(sc => { io.observe(sc); const v = $('video', sc); v.addEventListener('timeupdate', () => { if (v.duration) $('.pbar i', sc).style.width = v.currentTime / v.duration * 100 + '%'; }); let last = 0;
-    sc.addEventListener('click', e => { if (e.target.closest('button,a,[data-go]')) return; const now = Date.now(); if (now - last < 300) { last = 0; sc.classList.remove('pop'); void sc.offsetWidth; sc.classList.add('pop'); if (!S.likes.includes(sc.dataset.id)) $('[data-act=rLike]', sc).click(); return; } last = now; setTimeout(() => { if (last !== now) return; last = 0; if (v.paused) { v.play().catch(() => { }); $('.cpp', sc).style.display = 'none'; } else { v.pause(); $('.cpp', sc).style.display = 'grid'; } }, 310); }); });
+  secs.forEach(sc => { io.observe(sc); let last = 0;
+    sc.addEventListener('click', e => { if (e.target.closest('button,a,[data-go]')) return; const now = Date.now(); if (now - last < 300) { last = 0; sc.classList.remove('pop'); void sc.offsetWidth; sc.classList.add('pop'); if (!S.likes.includes(sc.dataset.id)) $('[data-act=rLike]', sc).click(); return; } last = now; setTimeout(() => { if (last !== now) return; last = 0; const p = sc.classList.toggle('paused'); $('.cpp', sc).style.display = p ? 'grid' : 'none'; }, 310); }); });
 }
-Object.assign(H, { cSound() { UI.muted = !UI.muted; $$('.clip video').forEach(v => v.muted = UI.muted); $('#csound').innerHTML = ic(UI.muted ? 'mute' : 'volume'); toast(UI.muted ? 'Sound off' : 'Sound on', 900); } });
 
 /* ---------- Comments with replies ---------- */
 const CM = { id: null, sort: 'Top', editing: null, deleting: null, draft: '', reply: null, open: new Set() };

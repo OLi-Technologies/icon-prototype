@@ -144,18 +144,18 @@ STORIES.push(
 );
 /* Short vertical clips (all 9:16, max 60 s) for the Clips feed. src can be shared with a story trailer. */
 const CLIPS = [
-  { id: 'k1', actor: 'a4', series: 's5', src: 'v/k1.mp4', img: 'encounter', cap: 'One take. No second chances. 🎬', genre: 'Thriller', likes: 8200, comments: 214, views: 96000, country: 'United States' },
-  { id: 'k2', actor: 'a1', series: 's1', src: 'v/k2.mp4', img: 'couple', cap: 'The look that broke the internet. Episode 2 drops tonight.', genre: 'Romance', likes: 15400, comments: 612, views: 188000, country: 'Philippines' },
-  { id: 'k3', actor: 'a3', series: 's14', src: 'v/k3.mp4', img: 'roommates', cap: 'Waiting room chaos, part 1 😂', genre: 'Comedy', likes: 6100, comments: 158, views: 74000, country: 'Singapore' },
-  { id: 'k4', actor: 'a2', series: 's12', src: 'v/k4.mp4', img: 'church2', cap: 'Practising my vows (please don’t laugh).', genre: 'Romance', likes: 9800, comments: 301, views: 121000, country: 'Philippines' },
-  { id: 'k5', actor: 'a5', series: 's16', src: 'v/k5.mp4', img: 'beyond', cap: 'This radio only plays tomorrow’s songs…', genre: 'Mystery', likes: 4200, comments: 97, views: 51000, country: 'Indonesia' },
-  { id: 'k6', actor: 'a1', series: 's13', src: 'v/k6.mp4', img: 'couple', cap: 'Behind the scenes of Spotlight.', genre: 'Drama', likes: 7300, comments: 189, views: 88000, country: 'Canada' },
-  { id: 'k7', actor: 'a4', series: 's3', src: 'v/k7.mp4', img: 'lastmsg', cap: 'Some words arrive too late.', genre: 'Drama', likes: 11200, comments: 420, views: 140000, country: 'Philippines' },
-  { id: 'k8', actor: 'a3', series: 's2', src: 'v/k8.mp4', img: 'roommates', cap: 'Same roof. Different dreams. 🏠', genre: 'Comedy', likes: 5400, comments: 133, views: 67000, country: 'Philippines' },
-  { id: 'k9', actor: 'a2', series: 's15', src: 'v/k9.mp4', img: 'encounter', cap: 'Do NOT pick up the phone.', genre: 'Thriller', likes: 6900, comments: 175, views: 83000, country: 'South Korea' },
-  { id: 'k10', actor: 'a5', series: 's11', src: 'v/k10.mp4', img: 'church2', cap: 'Nine dawns. One wish.', genre: 'Drama', likes: 3900, comments: 88, views: 42000, country: 'Philippines' },
-  { id: 'k11', actor: 'a1', series: 's9', src: 'v/k11.mp4', img: 'smile', cap: 'Start over, one scene at a time.', genre: 'Drama', likes: 5100, comments: 121, views: 59000, country: 'Australia' },
-  { id: 'k12', actor: 'a4', series: 's8', src: 'v/k12.mp4', img: 'trio', cap: 'Barkada reunion (zero plans).', genre: 'Comedy', likes: 8800, comments: 266, views: 104000, country: 'Philippines' }
+  { id: 'k1', actor: 'a4', series: 's5', src: 'v/k1.mp4', img: 'k1', cap: 'One take. No second chances. 🎬', genre: 'Thriller', likes: 8200, comments: 214, views: 96000, country: 'United States' },
+  { id: 'k2', actor: 'a1', series: 's1', src: 'v/k2.mp4', img: 'k2', cap: 'The look that broke the internet. Episode 2 drops tonight.', genre: 'Romance', likes: 15400, comments: 612, views: 188000, country: 'Philippines' },
+  { id: 'k3', actor: 'a3', series: 's14', src: 'v/k3.mp4', img: 'k3', cap: 'Waiting room chaos, part 1 😂', genre: 'Comedy', likes: 6100, comments: 158, views: 74000, country: 'Singapore' },
+  { id: 'k4', actor: 'a2', series: 's12', src: 'v/k4.mp4', img: 'k4', cap: 'Practising my vows (please don’t laugh).', genre: 'Romance', likes: 9800, comments: 301, views: 121000, country: 'Philippines' },
+  { id: 'k5', actor: 'a5', series: 's16', src: 'v/k5.mp4', img: 'k5', cap: 'This radio only plays tomorrow’s songs…', genre: 'Mystery', likes: 4200, comments: 97, views: 51000, country: 'Indonesia' },
+  { id: 'k6', actor: 'a1', series: 's13', src: 'v/k6.mp4', img: 'k6', cap: 'Behind the scenes of Spotlight.', genre: 'Drama', likes: 7300, comments: 189, views: 88000, country: 'Canada' },
+  { id: 'k7', actor: 'a4', series: 's3', src: 'v/k7.mp4', img: 'k7', cap: 'Some words arrive too late.', genre: 'Drama', likes: 11200, comments: 420, views: 140000, country: 'Philippines' },
+  { id: 'k8', actor: 'a3', series: 's2', src: 'v/k8.mp4', img: 'k8', cap: 'Same roof. Different dreams. 🏠', genre: 'Comedy', likes: 5400, comments: 133, views: 67000, country: 'Philippines' },
+  { id: 'k9', actor: 'a2', series: 's15', src: 'v/k9.mp4', img: 'k9', cap: 'Do NOT pick up the phone.', genre: 'Thriller', likes: 6900, comments: 175, views: 83000, country: 'South Korea' },
+  { id: 'k10', actor: 'a5', series: 's11', src: 'v/k10.mp4', img: 'k10', cap: 'Nine dawns. One wish.', genre: 'Drama', likes: 3900, comments: 88, views: 42000, country: 'Philippines' },
+  { id: 'k11', actor: 'a1', series: 's9', src: 'v/k11.mp4', img: 'k11', cap: 'Start over, one scene at a time.', genre: 'Drama', likes: 5100, comments: 121, views: 59000, country: 'Australia' },
+  { id: 'k12', actor: 'a4', series: 's8', src: 'v/k12.mp4', img: 'k12', cap: 'Barkada reunion (zero plans).', genre: 'Comedy', likes: 8800, comments: 266, views: 104000, country: 'Philippines' }
 ].map(c => { const a = ACTORS.find(x => x.id === c.actor); const st = STORIES.find(x => x.id === c.series); return { ...c, isClip: true, title: st ? st.title : 'Clip', tags: [c.genre], city: 'Global', eps: 1, tagline: c.cap, syn: c.cap, cast: [c.actor], clip: c.src }; });
 
 const TIERS = {

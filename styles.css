@@ -789,3 +789,31 @@ nav button span{font-size:10.5px}
 :root[data-theme=light] .hero2,:root[data-theme=light] .hero2 *:not(.btn),:root[data-theme=light] .ctop,:root[data-theme=light] .ctop .hbtn,:root[data-theme=light] .clip,:root[data-theme=light] .clip .rinfo,:root[data-theme=light] .clip .rinfo *{color:#fff}
 :root[data-theme=light] .hero2 .btn:not(.pri){color:#fff}
 :root[data-theme=light] .phead .xs:not(.mute){color:var(--text)}
+
+/* ---------- Clips: 9:16 frames with gentle motion ---------- */
+.clip>.kbg{position:absolute;inset:-30px;background-size:cover;background-position:center;filter:blur(26px) brightness(.55);transform:scale(1.1)}
+.clip>.kframe{position:absolute;left:0;right:0;top:50%;width:100%;max-height:100%;aspect-ratio:9/16;transform:translateY(-50%);overflow:hidden;background:#000}
+.kimg{width:100%;height:100%;object-fit:cover;display:block;transform-origin:50% 50%;animation-duration:14s;animation-timing-function:ease-in-out;animation-iteration-count:infinite;animation-direction:alternate;animation-play-state:paused;will-change:transform}
+.ka0{animation-name:kz0}.ka1{animation-name:kz1}.ka2{animation-name:kz2}.ka3{animation-name:kz3}
+@keyframes kz0{from{transform:scale(1.02)}to{transform:scale(1.16) translate(-2%,-1.5%)}}
+@keyframes kz1{from{transform:scale(1.16) translate(2%,0)}to{transform:scale(1.04) translate(-1%,1%)}}
+@keyframes kz2{from{transform:scale(1.08) translate(-2%,2%)}to{transform:scale(1.18) translate(2%,-2%)}}
+@keyframes kz3{from{transform:scale(1.12) translate(0,-2%)}to{transform:scale(1.03) translate(0,2%)}}
+.clip.on:not(.paused) .kimg{animation-play-state:running}
+.clip>.pbar i{width:100%;transform-origin:left;animation:kpb 14s linear infinite;animation-play-state:paused}
+.clip.on:not(.paused)>.pbar i{animation-play-state:running}
+@keyframes kpb{from{transform:scaleX(0)}to{transform:scaleX(1)}}
+.clip>.kframe::after{content:'';position:absolute;inset:0;background:radial-gradient(120% 90% at 50% 40%,transparent 55%,rgba(0,0,0,.35));pointer-events:none}
+
+/* ---------- Light theme refinements ---------- */
+:root[data-theme=light]{--text:#0b0a1f;--mute:#5d5b84}
+:root[data-theme=light] nav button.cr .crc{box-shadow:0 0 0 5px #fff,0 8px 22px rgba(168,59,255,.4)}
+:root[data-theme=light] nav button{color:#3c3a63}
+:root[data-theme=light] nav button.on{background:#e6defe;color:#0b0a1f;font-weight:700}
+:root[data-theme=light] nav button.on svg{color:#4a22e0;stroke-width:2.4}
+:root[data-theme=light] nav button.cr span{color:#4a22e0;font-weight:700}
+:root[data-theme=light] .chip.on,:root[data-theme=light] .chip.on *,:root[data-theme=light] .btn.pri,:root[data-theme=light] .btn.pri *,:root[data-theme=light] .csend,:root[data-theme=light] .mb.me,:root[data-theme=light] .pill.pk,:root[data-theme=light] .pill.vi,:root[data-theme=light] .stt .sv,:root[data-theme=light] .epnew,:root[data-theme=light] .btn.sm.pri{color:#fff}
+:root[data-theme=light] nav button span{color:#2e2c52}
+:root[data-theme=light] nav button.on span{color:#0b0a1f;font-weight:700}
+:root[data-theme=light] nav button.on{background:#e6defe}
+:root[data-theme=light] nav button.on .me{box-shadow:0 0 0 1.5px #fff,0 0 0 3px #4a22e0}
