@@ -751,12 +751,6 @@ nav button span{font-size:10.5px}
 .srow .xs,.srow div{text-transform:none}
 .phead{display:flex;gap:12px;align-items:flex-start;margin:2px 0 12px}
 .pstats5{margin-top:0}
-.lbtop{display:flex;align-items:center;gap:8px;justify-content:space-between}
-.lbtop .tabs{flex:none;margin:6px 0 4px;padding:2px 0}
-.lbtop .tabs button{padding:0 12px;height:32px;font-size:14px}
-.lbtop .pstrip{margin:0;flex:1;min-width:0;justify-content:flex-end;gap:8px;padding:6px 8px;font-size:11.5px}
-.lbtop .pstrip b{font-size:11.5px}
-.lbtop .pstrip.off{font-size:11px;gap:5px;color:var(--mute)}
 .lbdate{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--mute);margin:2px 0 8px}.lbdate b{color:var(--text);font-weight:600}
 
 /* ---------- Light theme ---------- */
@@ -818,8 +812,6 @@ nav button span{font-size:10.5px}
 :root[data-theme=light] nav button.on{background:#e6defe}
 :root[data-theme=light] nav button.on .me{box-shadow:0 0 0 1.5px #fff,0 0 0 3px #4a22e0}
 
-.lbtop .pstrip{justify-content:space-between;gap:6px}
+.pstrip{gap:7px;padding:6px 8px}
+:root[data-theme=light] .pstrip .xs{color:#8a5500!important}
 :root[data-theme=light] .pstrip .p1{color:#8a5500}:root[data-theme=light] .pstrip .p2{color:#3f4870}:root[data-theme=light] .pstrip .p3{color:#8a3d0c}
-.lbtop .pstrip{padding:6px 6px;gap:4px}.lbtop .pstrip b{font-size:11px}.lbtop .tabs button{padding:0 10px}
-.lbtop .pstrip b{font-size:10.5px;letter-spacing:-.1px}.lbtop .pstrip{gap:3px;padding:6px 5px}.lbtop .tabs{margin-right:2px}
-.lbtop .pstrip>svg:last-child{display:none}.lbtop .pstrip{justify-content:space-around}
