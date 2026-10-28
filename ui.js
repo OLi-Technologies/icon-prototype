@@ -67,7 +67,7 @@ function home() {
     <div class="cta" data-go="#/create" role="link" tabindex="0">${ic('plusq').replace('class="i', 'style="width:26px;height:26px;color:#c9a8ff" class="i')}<div class="grow"><b>Share your own series</b><div class="xs mute">Record or upload a 60-second episode, 9:16.</div></div>${ic('chevR')}</div>`;
   } else if (T === 'trending') body = egrid([...all].sort((a, b) => sv(b) - sv(a)).slice(0, 18), true);
   else if (T === 'new') body = egrid([...userStories(), ...[...STORIES].reverse()].slice(0, 18));
-  else if (T === 'genre') { const g = S.hGenre; const gs = ['All', ...GENRES.map(x => x[0])]; body = `<div class="chips sub">${gs.map(x => `<button class="chip ${g === x ? 'on' : ''}" data-act="hGenre" data-v="${x}">${x === 'All' ? 'All genres' : x}</button>`).join('')}</div>${egrid(all.filter(s => g === 'All' || s.genre === g || s.tags.includes(g)).sort((a, b) => sv(b) - sv(a)))}`; }
+  else if (T === 'genre') { const g = S.hGenre; const gs = ['All', ...GENRES.map(x => x[0])]; body = `<div class="chips sub">${gs.map(x => `<button class="chip ${g === x ? 'on' : ''}" data-act="hGenre" data-v="${x}">${x === 'All' ? 'All Genres' : x}</button>`).join('')}</div>${egrid(all.filter(s => g === 'All' || s.genre === g || s.tags.includes(g)).sort((a, b) => sv(b) - sv(a)))}`; }
   else if (T === 'actors') body = `<div style="margin-top:6px">${PEOPLE.filter(p => p.actor).map(p => peopleRow(p, followBtn(p.id))).join('')}</div>`;
   else { const c = S.hCountry; body = `<div class="fline">${countryDD('hc', c, v => { S.hCountry = v; save(); router(); })}</div>${egrid(all.filter(s => c === 'All' || s.country === c).sort((a, b) => sv(b) - sv(a)))}`; }
   shell(`${header()}${tabsRow(HTABS, T, 'homeTab')}${body}`, { nav: 'home' });
@@ -130,11 +130,11 @@ function ownerOf(s) {
 function reelBody(s, n = 1, ep = null) {
   const lk = S.likes.includes(s.id), sd = S.saved.includes(s.id), o = ownerOf(s);
   const sub = s.isClip ? esc(s.cap || s.tagline) : esc(ep?.desc || s.tagline);
-  return `<div class="rail2"><button data-act="rLike" data-v="${s.id}" class="${lk ? 'on' : ''}" aria-label="Like" aria-pressed="${lk}">${ic('heart', lk ? 'f' : '')}<span>${fmt(slikes(s))}</span></button><button data-act="rCm" data-v="${s.id}" aria-label="Comments">${ic('comment')}<span class="cc-${s.id}">${fmt(ccount(s))}</span></button>${s.mine ? '' : `<button data-act="gift" data-v="${s.id}" class="giftb" aria-label="Send a gift">${ic('gift')}<span>Gift</span></button>`}<button data-act="rShare" data-v="${s.id}" aria-label="Share">${ic('share')}</button><button data-act="rSave" data-v="${s.id}" class="${sd ? 'on2' : ''}" aria-label="Save">${ic('bookmark', sd ? 'f' : '')}</button><button data-act="rMore" data-v="${s.id}" aria-label="More">${ic('dotsh')}</button></div>
+  return `<div class="rail2"><button data-act="rLike" data-v="${s.id}" class="${lk ? 'on' : ''}" aria-label="Heart" aria-pressed="${lk}">${ic('heart', lk ? 'f' : '')}<span>${fmt(slikes(s))}</span></button><button data-act="rCm" data-v="${s.id}" aria-label="Comments">${ic('comment')}<span class="cc-${s.id}">${fmt(ccount(s))}</span></button>${s.mine ? '' : `<button data-act="gift" data-v="${s.id}" class="giftb" aria-label="Send a gift">${ic('gift')}<span>Gift</span></button>`}<button data-act="rShare" data-v="${s.id}" aria-label="Share">${ic('share')}</button><button data-act="rSave" data-v="${s.id}" class="${sd ? 'on2' : ''}" aria-label="Save">${ic('bookmark', sd ? 'f' : '')}</button><button data-act="rMore" data-v="${s.id}" aria-label="More">${ic('dotsh')}</button></div>
   <div class="rinfo"><div class="row" style="gap:8px"><span data-go="${o.self ? '#/profile' : '#/actor/' + o.id}" class="row" style="gap:8px;cursor:pointer">${ring(o.img, 30)}<b class="rn">${esc(o.name)}</b></span>${o.self ? '' : `<button class="fbtn" data-act="rFollow" data-v="${o.id}">${S.aFollows.includes(o.id) ? 'Following' : 'Follow'}</button>`}</div><div class="rt">${s.isClip ? '' : `<b>${esc(s.title)}</b> · ${s.eps > 1 || !s.isClip ? `Ep ${n}` : ''} `}<span class="rcap">${sub}</span></div><div class="rm">${ic('eye')}<span class="vw-${s.id}">${fmt(s.isClip ? sv(s) : epViews(s, n))}</span> · ${flag(s.country)} ${esc(s.country)}${s.isClip && s.series ? ` · <button class="rlink" data-go="#/story/${s.series}">Watch series ›</button>` : ''}</div></div>`;
 }
 Object.assign(H, {
-  rLike(el, e) { if (!need('like videos')) return; H.like({ v: el.v }, true); const b = e.target.closest('button'); const s = getStory(el.v), l = S.likes.includes(el.v); b.classList.toggle('on', l); b.setAttribute('aria-pressed', l); b.innerHTML = ic('heart', l ? 'f' : '') + `<span>${fmt(slikes(s))}</span>`; },
+  rLike(el, e) { if (!need('heart videos')) return; H.like({ v: el.v }, true); const b = e.target.closest('button'); const s = getStory(el.v), l = S.likes.includes(el.v); b.classList.toggle('on', l); b.setAttribute('aria-pressed', l); b.innerHTML = ic('heart', l ? 'f' : '') + `<span>${fmt(slikes(s))}</span>`; },
   rCm(el) { openComments(el.v); },
   rShare(el) { H.share({ v: el.v }); },
   rSave(el, e) { if (!need('save videos')) return; const i = S.saved.indexOf(el.v); i < 0 ? S.saved.push(el.v) : S.saved.splice(i, 1); save(); const b = e.target.closest('button'); b.classList.toggle('on2', i < 0); b.innerHTML = ic('bookmark', i < 0 ? 'f' : ''); toast(i < 0 ? 'Added to My list.' : 'Removed from My list.', 1400); },
@@ -156,7 +156,7 @@ function play(id, n) {
   app.append(o); const vid = $('video', o);
   if (vid) { vid.muted = UI.muted; if (E) { vid.playbackRate = E.speed || 1; vid.volume = Math.min(1, (E.vol ?? 100) / 100); const lo = E.start || 0, hi = E.end || 0; vid.addEventListener('loadedmetadata', () => { if (lo) vid.currentTime = lo; }); vid.addEventListener('timeupdate', () => { if (hi && vid.currentTime >= hi) vid.currentTime = lo; }); } }
   const total = () => vid && vid.duration && isFinite(vid.duration) ? vid.duration : dur; let t = 0;
-  const counted = () => { const k = `q_${id}_${n}`, day = new Date().toDateString(); if (S.views[k] !== day) { S.views[k] = day; S.views['add_' + id] = (S.views['add_' + id] || 0) + 1; S.views['ev_' + id + '_' + n] = (S.views['ev_' + id + '_' + n] || 0) + 1; const pv = $('.vw-' + id, o); if (pv) pv.textContent = fmt(epViews(s, n)); S.views['p_' + id] = n; save(); const p = S.published.find(x => 'u_' + x.id === id); if (p) { p.views = (p.views || 0) + 1; save(); } } };
+  const counted = () => { const k = `q_${id}_${n}`, now = Date.now(); if (viewOk(k, now)) { S.views[k] = now; S.views['add_' + id] = (S.views['add_' + id] || 0) + 1; S.views['ev_' + id + '_' + n] = (S.views['ev_' + id + '_' + n] || 0) + 1; const pv = $('.vw-' + id, o); if (pv) pv.textContent = fmt(epViews(s, n)); S.views['p_' + id] = n; save(); const p = S.published.find(x => 'u_' + x.id === id); if (p) { p.views = (p.views || 0) + 1; save(); } } };
   clearInterval(playTimer); playTimer = setInterval(() => { if (paused) return; t = vid ? vid.currentTime : t + .25; const T = total() || 1; const st = (E?.start) || 0; $('#pbar', o).style.width = Math.min(100, Math.max(0, (t - st) / ((E?.end || T) - st || 1) * 100)) + '%'; if (t >= Math.min(10, T * .5)) counted(); }, 250);
   o.addEventListener('click', e => {
     const x = e.target.closest('[data-x]')?.dataset.x; if (!x) return;
@@ -176,7 +176,7 @@ function clips() {
   const activate = sc => {
     secs.forEach(x => { if (x !== sc) { const v = $('video', x); if (v) { v.pause(); } } }); cur = sc; const v = load(sc); v.muted = UI.muted; v.play().catch(() => { });
     const i = secs.indexOf(sc); if (secs[i + 1]) load(secs[i + 1]);
-    clearTimeout(sc._t); sc._t = setTimeout(() => { const c = getStory(sc.dataset.id), k = 'q_' + c.id, day = new Date().toDateString(); if (cur === sc && S.views[k] !== day) { S.views[k] = day; S.views['add_' + c.id] = (S.views['add_' + c.id] || 0) + 1; save(); const w = $('.vw-' + c.id, sc); if (w) w.textContent = fmt(sv(c)); } }, 3000);
+    clearTimeout(sc._t); sc._t = setTimeout(() => { const c = getStory(sc.dataset.id), k = 'q_' + c.id, now = Date.now(); if (cur === sc && viewOk(k, now)) { S.views[k] = now; S.views['add_' + c.id] = (S.views['add_' + c.id] || 0) + 1; save(); const w = $('.vw-' + c.id, sc); if (w) w.textContent = fmt(sv(c)); } }, 3000);
   };
   const io = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) activate(e.target); }), { root, threshold: [.7] });
   secs.forEach(sc => { io.observe(sc); const v = $('video', sc); v.addEventListener('timeupdate', () => { if (v.duration) $('.pbar i', sc).style.width = v.currentTime / v.duration * 100 + '%'; }); let last = 0;
@@ -235,7 +235,7 @@ function cmFind(cid) {
 }
 Object.assign(H, {
   cmSort() { CM.sort = CM.sort === 'Top' ? 'Newest' : 'Top'; $('#cmSort').firstChild.textContent = CM.sort + ' '; cmRefresh(false); },
-  cmLike(el) { if (!need('like comments')) return; const a = (S.cl[el.cid] = S.cl[el.cid] || []); const i = a.indexOf(S.user.id); i < 0 ? a.push(S.user.id) : a.splice(i, 1); save(); cmRefresh(); },
+  cmLike(el) { if (!need('heart comments')) return; const a = (S.cl[el.cid] = S.cl[el.cid] || []); const i = a.indexOf(S.user.id); i < 0 ? a.push(S.user.id) : a.splice(i, 1); save(); cmRefresh(); },
   cmEdit(el) { CM.editing = el.cid; CM.deleting = null; cmRefresh(); $('#cmEdit')?.focus(); },
   cmSave(el) { const t = $('#cmEdit').value.trim(); if (!t) return toast('It can’t be empty.'); const f = cmFind(el.cid); if (!f || f.c.uid !== S.user.id) return; if (t !== f.c.t) { f.c.t = t; f.c.edited = true; save(); } CM.editing = null; cmRefresh(); },
   cmCancel() { CM.editing = null; CM.deleting = null; cmRefresh(); },

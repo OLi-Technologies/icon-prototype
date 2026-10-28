@@ -745,3 +745,47 @@ nav button span{font-size:10.5px}
 .sburst{position:absolute;inset:0;z-index:92;pointer-events:none;overflow:hidden}
 .sburst i{position:absolute;bottom:-40px;font-style:normal;animation:sb 1.5s ease-out forwards}
 @keyframes sb{0%{transform:translateY(0) scale(.6);opacity:0}15%{opacity:1}100%{transform:translateY(-82vh) scale(1.2) rotate(18deg);opacity:0}}
+
+/* ---------- Oct 28 updates ---------- */
+.btn,.chip,.link,.tlink,.tabs button,.tabs3 button,.t-tabs button,.seg2 button,.seg3 button,button.srow{text-transform:capitalize}
+.srow .xs,.srow div{text-transform:none}
+.phead{display:flex;gap:12px;align-items:flex-start;margin:2px 0 12px}
+.pstats5{margin-top:0}
+.lbtop{display:flex;align-items:center;gap:8px;justify-content:space-between}
+.lbtop .tabs{flex:none;margin:6px 0 4px;padding:2px 0}
+.lbtop .tabs button{padding:0 12px;height:32px;font-size:14px}
+.lbtop .pstrip{margin:0;flex:1;min-width:0;justify-content:flex-end;gap:8px;padding:6px 8px;font-size:11.5px}
+.lbtop .pstrip b{font-size:11.5px}
+.lbtop .pstrip.off{font-size:11px;gap:5px;color:var(--mute)}
+.lbdate{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--mute);margin:2px 0 8px}.lbdate b{color:var(--text);font-weight:600}
+
+/* ---------- Light theme ---------- */
+:root[data-theme=light]{color-scheme:light;--bg:#f4f3fb;--bg2:#ebe9f7;--card:#ffffff;--card2:#efedf9;--line:rgba(30,20,80,.13);--text:#16143a;--mute:#6a6890}
+:root[data-theme=light] body,:root[data-theme=light] html{background:#e6e4f2}
+:root[data-theme=light] #app{background:radial-gradient(120% 50% at 80% -5%,rgba(124,77,255,.14),transparent 60%),radial-gradient(90% 40% at 0% 100%,rgba(255,43,214,.07),transparent 60%),var(--bg)}
+:root[data-theme=light] .field input,:root[data-theme=light] .field select,:root[data-theme=light] .search input,:root[data-theme=light] .cin textarea,:root[data-theme=light] .rpo,:root[data-theme=light] .rpt,:root[data-theme=light] .sec a,:root[data-theme=light] .link,:root[data-theme=light] .hbtn,:root[data-theme=light] .cib,:root[data-theme=light] .stt button,:root[data-theme=light] .paym button,:root[data-theme=light] .mb.th,:root[data-theme=light] .mrx button,:root[data-theme=light] .mstrip button,:root[data-theme=light] .zp button,:root[data-theme=light] .cmfield input{color:var(--text)}
+:root[data-theme=light] select option{background:#fff;color:var(--text)}
+:root[data-theme=light] .tabs button.on,:root[data-theme=light] .tabs3 button.on,:root[data-theme=light] .t-tabs button.on,:root[data-theme=light] .ptabs button.on,:root[data-theme=light] .steps .s.on,:root[data-theme=light] nav button.on{color:var(--text)}
+:root[data-theme=light] .tabs button.on{border-color:var(--text)}
+:root[data-theme=light] .tabs button.on{background:rgba(124,77,255,.14)}
+:root[data-theme=light] .ptabs button.on{border-color:var(--text)}
+:root[data-theme=light] nav button.on{background:rgba(124,77,255,.14)}
+:root[data-theme=light] .seg2,:root[data-theme=light] .seg3,:root[data-theme=light] .cmfield,:root[data-theme=light] .socb{background:rgba(30,20,80,.07)}
+:root[data-theme=light] .seg2 button.on,:root[data-theme=light] .seg3 button.on{background:#fff;color:var(--text);box-shadow:0 1px 3px rgba(30,20,80,.18)}
+:root[data-theme=light] .btn:not(.pri):not(.google):not(.fb):not(.glass):not(.danger){color:var(--text)}
+:root[data-theme=light] .stt button.on,:root[data-theme=light] .paym button.on{background:rgba(124,77,255,.12)}
+:root[data-theme=light] .balchip{color:#9a6a00;background:rgba(255,200,61,.22)}
+:root[data-theme=light] .gold{color:#b97a00}
+:root[data-theme=light] .pst span,:root[data-theme=light] .mute,:root[data-theme=light] .xs.mute{color:var(--mute)}
+:root[data-theme=light] .pstrip{background:linear-gradient(135deg,rgba(124,77,255,.12),rgba(255,43,214,.07))}
+:root[data-theme=light] .pstrip .p1{color:#a66a00}:root[data-theme=light] .pstrip .p2{color:#5b6489}:root[data-theme=light] .pstrip .p3{color:#a9531b}
+:root[data-theme=light] .lbt{background:linear-gradient(90deg,#16143a 40%,#c4259f);-webkit-background-clip:text;background-clip:text}
+:root[data-theme=light] .sheet,:root[data-theme=light] .modal,:root[data-theme=light] .ddsheet{background:#fff;color:var(--text)}
+:root[data-theme=light] .scard,:root[data-theme=light] .card{box-shadow:0 1px 2px rgba(30,20,80,.06)}
+:root[data-theme=light] nav{background:rgba(255,255,255,.92);box-shadow:0 4px 18px rgba(30,20,80,.14)}
+:root[data-theme=light] .toast{background:#16143a;color:#fff}
+/* video and photo surfaces stay dark with white text */
+:root[data-theme=light] .reel,:root[data-theme=light] .rail2,:root[data-theme=light] .rail2 button,:root[data-theme=light] .stop,:root[data-theme=light] .podium,:root[data-theme=light] .egi,:root[data-theme=light] .hero,:root[data-theme=light] .poster,:root[data-theme=light] .pod{color:#fff}
+:root[data-theme=light] .hero2,:root[data-theme=light] .hero2 *:not(.btn),:root[data-theme=light] .ctop,:root[data-theme=light] .ctop .hbtn,:root[data-theme=light] .clip,:root[data-theme=light] .clip .rinfo,:root[data-theme=light] .clip .rinfo *{color:#fff}
+:root[data-theme=light] .hero2 .btn:not(.pri){color:#fff}
+:root[data-theme=light] .phead .xs:not(.mute){color:var(--text)}
