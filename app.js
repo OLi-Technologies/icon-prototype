@@ -13,7 +13,7 @@ let route = { name: '', args: [] };
 let navAfterAuth = null;
 
 /* ---------- helpers ---------- */
-const gimg = g => ({ Romance: 'couple', Comedy: 'roommates', Drama: 'smile', Horror: 'beyond', Thriller: 'encounter', Mystery: 'lastmsg', Vlog: 'smile', Podcast: 'man' })[g] || 'couple';
+const gimg = g => ({ Romance: 'k2', Comedy: 'roommates', Drama: 'k7', Horror: 'k4', Thriller: 'k8', Mystery: 'k1', Vlog: 'k3', Podcast: 'k10' })[g] || 'couple';
 const allStories = () => [...userStories(), ...STORIES];
 const userStories = () => S.published.filter(p => p.status === 'published' && p.vis !== 'draft').map(p => { const eps = p.episodes || []; return { id: 'u_' + p.id, uid: p.id, title: p.title, genre: p.genre, tags: [p.genre], city: '', country: p.country || 'Philippines', img: p.thumb || gimg(p.genre), eps: eps.length || p.eps || 1, views: p.views || 0, likes: p.likes || 0, comments: p.comments || 0, tagline: p.desc || p.caption || 'New on ICON', syn: p.desc || p.caption || 'A new series made on ICON.', cast: [...new Set(eps.flatMap(e => e.cast || []))], mine: true, prodId: p.id, vis: p.vis, episodes: eps }; });
 const getStory = id => allStories().find(s => s.id === id) || CLIPS.find(s => s.id === id);
