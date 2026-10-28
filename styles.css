@@ -817,3 +817,7 @@ nav button span{font-size:10.5px}
 :root[data-theme=light] nav button.on span{color:#0b0a1f;font-weight:700}
 :root[data-theme=light] nav button.on{background:#e6defe}
 :root[data-theme=light] nav button.on .me{box-shadow:0 0 0 1.5px #fff,0 0 0 3px #4a22e0}
+
+.lbtop .pstrip{justify-content:space-between;gap:6px}
+:root[data-theme=light] .pstrip .p1{color:#8a5500}:root[data-theme=light] .pstrip .p2{color:#3f4870}:root[data-theme=light] .pstrip .p3{color:#8a3d0c}
+.lbtop .pstrip{padding:6px 6px;gap:4px}.lbtop .pstrip b{font-size:11px}.lbtop .tabs button{padding:0 10px}
