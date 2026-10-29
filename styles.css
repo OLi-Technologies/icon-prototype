@@ -858,3 +858,20 @@ nav button span{font-size:10.5px}
 .pod .info{gap:4px}
 :root[data-theme=light] .plc .pt2 small{color:#16143a}:root[data-theme=light] .plc{color:#5b6489}:root[data-theme=light] .plc.p1{color:#a66a00}:root[data-theme=light] .plc.p3{color:#a9531b}
 :root[data-theme=light] .plc .pt2 b{text-shadow:none}:root[data-theme=light] .pmeta{color:#8a5500}
+
+/* Leaderboard v3.1: crowns, full laurel wreaths, glowing podium discs */
+.pban{background:radial-gradient(90px 60px at 12% 18%,rgba(255,200,61,.18),transparent 70%),radial-gradient(110px 70px at 88% 22%,rgba(255,154,61,.16),transparent 70%),radial-gradient(130% 100% at 50% 0,rgba(124,77,255,.38),rgba(10,8,40,0) 72%);position:relative;overflow:hidden}
+.pban::before{content:"";position:absolute;inset:0;pointer-events:none;background:radial-gradient(circle,#ffe9a8 0 1.2px,transparent 1.8px) 8% 20%/46px 52px,radial-gradient(circle,#fff 0 1px,transparent 1.6px) 60% 70%/62px 48px;opacity:.5}
+.plcs{position:relative;grid-template-columns:1fr 1.3fr 1fr;align-items:end}
+.plc{padding:44px 6px 30px;min-height:132px}.plc.p1{padding-top:54px;padding-bottom:34px;min-height:156px}
+.plc .cr{top:4px}.plc .cr .crn{width:34px;height:25px;color:inherit;filter:drop-shadow(0 0 7px currentColor)}.plc.p1 .cr .crn{width:48px;height:35px}
+.plc .lau{bottom:22px;width:24px;height:64px;color:inherit;filter:drop-shadow(0 0 4px currentColor);opacity:1}.plc .lau.l{left:0}.plc .lau.r{right:0}
+.plc.p1 .lau{width:30px;height:84px;bottom:26px}
+.plc .pt2{padding:0 20px;z-index:1}.plc.p1 .pt2{padding:0 26px}
+.plc .disc{position:absolute;left:3%;right:3%;bottom:2px;height:24px;border-radius:50%;opacity:1;background:radial-gradient(ellipse at 50% 35%,rgba(255,255,255,.85) 0,currentColor 38%,rgba(0,0,0,.35) 100%);box-shadow:0 0 26px currentColor,0 7px 0 -1px color-mix(in srgb,currentColor 45%,#000),0 12px 22px rgba(0,0,0,.5)}
+.plc .disc::after{content:"";position:absolute;left:14%;right:14%;top:-7px;height:20px;border-radius:50%;background:radial-gradient(ellipse at 50% 40%,rgba(255,255,255,.55),color-mix(in srgb,currentColor 60%,#000));opacity:.55}
+.plc.p1 .disc{height:28px;left:0;right:0}
+:root[data-theme=light] .plc .disc{box-shadow:0 6px 14px rgba(40,30,90,.25),0 6px 0 -1px color-mix(in srgb,currentColor 50%,#555)}
+:root[data-theme=light] .plc .lau,:root[data-theme=light] .plc .cr .crn{filter:none}
+
+.plcs{padding:0 10px}.plc .lau{filter:drop-shadow(0 0 3px currentColor)}
