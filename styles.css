@@ -875,3 +875,16 @@ nav button span{font-size:10.5px}
 :root[data-theme=light] .plc .lau,:root[data-theme=light] .plc .cr .crn{filter:none}
 
 .plcs{padding:0 10px}.plc .lau{filter:drop-shadow(0 0 3px currentColor)}
+
+/* Leaderboard v3.2: compact prize banner */
+.pban{margin:4px 0 0;padding:2px 2px 0}
+.plcs{padding:0 6px}
+.plc{padding:28px 4px 17px;min-height:0}.plc.p1{padding-top:33px;padding-bottom:19px;min-height:0}
+.plc .cr{top:2px}.plc .cr .crn{width:22px;height:16px}.plc.p1 .cr .crn{width:30px;height:22px}
+.plc .lau{width:15px;height:40px;bottom:12px}.plc.p1 .lau{width:18px;height:50px;bottom:14px}
+.plc .pt2{padding:0 12px}.plc.p1 .pt2{padding:0 15px}
+.plc .pt2 small{font-size:10px}.plc .pt2 b{font-size:14px}.plc.p1 .pt2 b{font-size:17px}
+.plc .disc{height:14px;bottom:2px;box-shadow:0 0 14px currentColor,0 4px 0 -1px color-mix(in srgb,currentColor 45%,#000)}
+.plc.p1 .disc{height:16px}.plc .disc::after{top:-4px;height:11px}
+.pmeta{padding:0 8px 2px;font-size:10.5px}
+.plc{padding-bottom:20px}.plc.p1{padding-bottom:22px}
